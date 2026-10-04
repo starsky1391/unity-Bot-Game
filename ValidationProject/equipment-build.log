@@ -1,0 +1,327 @@
+[Licensing::Module] Trying to connect to existing licensing client channel...
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-COLORFUL" at "2026-10-04T11:52:38.6955749Z"
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 34404, path: "C:/Program Files/Unity Hub/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              90b13f94d1124eb88d6fa95221adcb19
+  Correlation Id:          9e9cc1dc1be4ac4c4c53f32f1160f51d
+  External correlation Id: 3692496440800675005
+  Machine Id:              oAE1lx9JU7+rNlz8W6OmiyI9E60=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-COLORFUL" (connect: 0.00s, validation: 0.01s, handshake: 0.05s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-COLORFUL-notifications" at "2026-10-04T11:52:38.7562633Z"
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully updated license
+Built from '2022.3/respin/2022.3.62f2-4af31df585-v2' branch; Version is '2022.3.62f3 (96770f904ca7) revision 9860879'; Using compiler version '192829333'; Build Type 'Release'
+OS: 'Windows 11  (10.0.26200) 64bit Core' Language: 'zh' Physical Memory: 16087 MB
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Serial number assigned to: "ewogICJzdWJzR3JvdXAiIDogInVuaXR5IGVkaXRvciIsCiAgIm5hbWVzcGFjZSIgOiAidW5pdHlfZWRpdG9yIiwKICAidHlwZSIgOiAiRURJVE9SIiwKICAidGFnIiA6ICJVbml0eVBlcnNvbmFsXXXX"
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 0
+[Licensing::Client] Successfully resolved entitlement details
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\2022.3.62f3\Editor\Unity.exe
+-batchmode
+-nographics
+-quit
+-projectPath
+C:\1Project\project_godot\animal\ValidationProject
+-executeMethod
+DemoBuilder.BuildWindows
+-logFile
+C:\1Project\project_godot\animal\ValidationProject\equipment-build.log
+Successfully changed project path to: C:\1Project\project_godot\animal\ValidationProject
+C:/1Project/project_godot/animal/ValidationProject
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gfx=262144"
+Player connection [48872]  Target information:
+
+Player connection [48872]  * "[IP] 172.17.0.1 [Port] 55504 [Flags] 2 [Guid] 2470847626 [EditorId] 2470847626 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-L89CB16) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [48872]  * "[IP] 192.168.56.1 [Port] 55504 [Flags] 2 [Guid] 2470847626 [EditorId] 2470847626 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-L89CB16) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [48872]  * "[IP] 172.22.160.1 [Port] 55504 [Flags] 2 [Guid] 2470847626 [EditorId] 2470847626 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-L89CB16) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [48872]  * "[IP] 172.18.0.1 [Port] 55504 [Flags] 2 [Guid] 2470847626 [EditorId] 2470847626 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-L89CB16) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [48872]  * "[IP] 10.6.22.1 [Port] 55504 [Flags] 2 [Guid] 2470847626 [EditorId] 2470847626 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-L89CB16) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [48872]  * "[IP] 192.168.31.64 [Port] 55504 [Flags] 2 [Guid] 2470847626 [EditorId] 2470847626 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-L89CB16) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Unable to join player connection multicast group (err: 10013).
+Player connection [48872] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+[Package Manager] UpmClient::Connect -- Connected to IPC stream "Upm-44356" after 0.3 seconds.
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 7 packages:
+  Built-in packages:
+    com.unity.ugui@1.0.0 (location: C:\1Project\project_godot\animal\ValidationProject\Library\PackageCache\com.unity.ugui@1.0.0)
+    com.unity.modules.audio@1.0.0 (location: C:\1Project\project_godot\animal\ValidationProject\Library\PackageCache\com.unity.modules.audio@1.0.0)
+    com.unity.modules.imgui@1.0.0 (location: C:\1Project\project_godot\animal\ValidationProject\Library\PackageCache\com.unity.modules.imgui@1.0.0)
+    com.unity.modules.jsonserialize@1.0.0 (location: C:\1Project\project_godot\animal\ValidationProject\Library\PackageCache\com.unity.modules.jsonserialize@1.0.0)
+    com.unity.modules.physics2d@1.0.0 (location: C:\1Project\project_godot\animal\ValidationProject\Library\PackageCache\com.unity.modules.physics2d@1.0.0)
+    com.unity.modules.imageconversion@1.0.0 (location: C:\1Project\project_godot\animal\ValidationProject\Library\PackageCache\com.unity.modules.imageconversion@1.0.0)
+    com.unity.modules.ui@1.0.0 (location: C:\1Project\project_godot\animal\ValidationProject\Library\PackageCache\com.unity.modules.ui@1.0.0)
+[Subsystems] No new subsystems found in resolved package list.
+Package Manager log level set to [2]
+[Package Manager] Done registering packages in 0.09 seconds
+Refreshing native plugins compatible for Editor in 0.00 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2022.3.62f3 (96770f904ca7)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/2022.3.62f3/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/1Project/project_godot/animal/ValidationProject/Assets
+Forcing GfxDevice: Null
+GfxDevice: creating device client; threaded=0; jobified=0
+NullGfxDevice:
+    Version:  NULL 1.0 [1.0]
+    Renderer: Null Device
+    Vendor:   Unity Technologies
+[Licensing::Client] Successfully resolved entitlement details
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/2022.3.62f3/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/2022.3.62f3/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/2022.3.62f3/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56356
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+ImportWorker Server TCP listen port: 0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/2022.3.62f3/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.006967 seconds.
+- Loaded All Assemblies, in  0.255 seconds
+Native extension for WindowsStandalone target not found
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.180 seconds
+Domain Reload Profiling: 433ms
+	BeginReloadAssembly (82ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (0ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (1ms)
+	RebuildCommonClasses (24ms)
+	RebuildNativeTypeToScriptingClass (7ms)
+	initialDomainReloadingComplete (47ms)
+	LoadAllAssembliesAndSetupDomain (93ms)
+		LoadAssemblies (80ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (91ms)
+			TypeCache.Refresh (90ms)
+				TypeCache.ScanAssembly (80ms)
+			ScanForSourceGeneratedMonoScriptInfo (0ms)
+			ResolveRequiredComponents (0ms)
+	FinalizeReload (180ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (149ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (8ms)
+			SetLoadedEditorAssemblies (5ms)
+			RefreshPlugins (0ms)
+			BeforeProcessingInitializeOnLoad (1ms)
+			ProcessInitializeOnLoadAttributes (100ms)
+			ProcessInitializeOnLoadMethodAttributes (35ms)
+			AfterProcessingInitializeOnLoad (0ms)
+			EditorAssembliesLoaded (0ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (0ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:80
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: C:\1Project\project_godot\animal\ValidationProject\
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping application/grpc - - 200 - application/grpc 29.0356ms
+Starting: C:\Program Files\Unity\2022.3.62f3\Editor\Data\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1900b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: C:/1Project/project_godot/animal/ValidationProject
+DisplayProgressbar: Compiling Scripts
+ExitCode: 0 Duration: 0s72ms
+*** Tundra build success (0.03 seconds), 0 items updated, 121 evaluated
+AssetDatabase: script compilation time: 0.461904s
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.182 seconds
+Refreshing native plugins compatible for Editor in 0.00 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Refreshing native plugins compatible for Editor in 0.00 ms, found 0 plugins.
+Native extension for WindowsStandalone target not found
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.248 seconds
+Domain Reload Profiling: 426ms
+	BeginReloadAssembly (111ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (3ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (18ms)
+	RebuildCommonClasses (24ms)
+	RebuildNativeTypeToScriptingClass (7ms)
+	initialDomainReloadingComplete (21ms)
+	LoadAllAssembliesAndSetupDomain (14ms)
+		LoadAssemblies (70ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (10ms)
+			TypeCache.Refresh (6ms)
+				TypeCache.ScanAssembly (2ms)
+			ScanForSourceGeneratedMonoScriptInfo (1ms)
+			ResolveRequiredComponents (2ms)
+	FinalizeReload (248ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (160ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (6ms)
+			SetLoadedEditorAssemblies (4ms)
+			RefreshPlugins (0ms)
+			BeforeProcessingInitializeOnLoad (31ms)
+			ProcessInitializeOnLoadAttributes (99ms)
+			ProcessInitializeOnLoadMethodAttributes (12ms)
+			AfterProcessingInitializeOnLoad (8ms)
+			EditorAssembliesLoaded (0ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (9ms)
+Asset Pipeline Refresh (id=a6a73e53ba725dc4caeade318425f8d5): Total: 1.062 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	Summary:
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=129 ms
+		Asset DB Callback time: managed=8 ms, native=0 ms
+		Scripting: domain reloads=1, domain reload time=451 ms, compile time=463 ms, other=9 ms
+		Project Asset Count: scripts=374, non-scripts=53
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokeBeforeRefreshCallbacks: 0.834ms
+	ApplyChangesToAssetFolders: 0.010ms
+	Scan: 10.253ms
+	OnSourceAssetsModified: 0.001ms
+	GetAllGuidsForCategorization: 0.048ms
+	CategorizeAssets: 3.592ms
+	ImportOutOfDateAssets: 250.284ms (-214.390ms without children)
+		CompileScripts: 463.416ms
+		ReloadNativeAssets: 0.000ms
+		UnloadImportedAssets: 0.919ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.073ms
+		InitializingProgressBar: 0.001ms
+		PostProcessAllAssetNotificationsAddChangedAssets: 0.001ms
+		OnDemandSchedulerStart: 0.264ms
+	PostProcessAllAssets: 8.089ms
+	GatherAllCurrentPrimaryArtifactRevisions: 0.000ms
+	UnloadStreamsBegin: 0.157ms
+	PersistCurrentRevisions: 0.014ms
+	UnloadStreamsEnd: 0.002ms
+	GenerateScriptTypeHashes: 0.607ms
+	Untracked: 789.087ms
+Application.AssetDatabase Initial Refresh End
+Scanning for USB devices : 4.207ms
+Initializing Unity extensions:
+Total cache size 267200532
+Total cache size after purge 267200532
+[Licensing::Client] Successfully resolved entitlement details
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-几何空洞
+[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ProgressiveSceneManager::Cancel()
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 14 unused Assets / (469.7 KB). Loaded Objects now: 772.
+Memory consumption went from 83.4 MB to 83.0 MB.
+Total: 2.731300 ms (FindLiveObjects: 0.046200 ms CreateObjectMapping: 0.011800 ms MarkObjects: 2.524700 ms  DeleteObjects: 0.147900 ms)
+
+Opening scene 'Assets/Scenes/HollowGeometry.unity'
+[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
+Loaded scene 'Assets/Scenes/HollowGeometry.unity'
+	Deserialize:            9.733 ms
+	Integration:            22.112 ms
+	Integration of assets:  0.019 ms
+	Thread Wait Time:       0.060 ms
+	Total Operation Time:   31.924 ms
+Unloading 1 unused Assets / (0.5 KB). Loaded Objects now: 1177.
+Memory consumption went from 82.5 MB to 82.5 MB.
+Total: 2.236500 ms (FindLiveObjects: 0.052200 ms CreateObjectMapping: 0.009800 ms MarkObjects: 2.163700 ms  DeleteObjects: 0.010400 ms)
+
+Opening scene 'Assets/Scenes/Rooms/Room0.unity additively'
+Loaded scene 'Assets/Scenes/Rooms/Room0.unity'
+	Deserialize:            6.334 ms
+	Integration:            0.846 ms
+	Integration of assets:  0.043 ms
+	Thread Wait Time:       0.026 ms
+	Total Operation Time:   7.249 ms
+Opening scene 'Assets/Scenes/Rooms/Room1.unity additively'
+Loaded scene 'Assets/Scenes/Rooms/Room1.unity'
+	Deserialize:            2.167 ms
+	Integration:            2.551 ms
+	Integration of assets:  0.001 ms
+	Thread Wait Time:       0.121 ms
+	Total Operation Time:   4.840 ms
+Opening scene 'Assets/Scenes/Rooms/Room2.unity additively'
+Loaded scene 'Assets/Scenes/Rooms/Room2.unity'
+	Deserialize:            2.076 ms
+	Integration:            1.993 ms
+	Integration of assets:  0.001 ms
+	Thread Wait Time:       0.054 ms
+	Total Operation Time:   4.123 ms
+Opening scene 'Assets/Scenes/Rooms/Room3.unity additively'
+Loaded scene 'Assets/Scenes/Rooms/Room3.unity'
+	Deserialize:            2.704 ms
+	Integration:            1.663 ms
+	Integration of assets:  0.002 ms
+	Thread Wait Time:       0.247 ms
+	Total Operation Time:   4.616 ms
+Opening scene 'Assets/Scenes/Rooms/Room4.unity additively'
+Loaded scene 'Assets/Scenes/Rooms/Room4.unity'
+	Deserialize:            2.570 ms
+	Integration:            0.600 ms
+	Integration of assets:  0.001 ms
+	Thread Wait Time:       0.059 ms
+	Total Operation Time:   3.230 ms
+Exception: Demo validation failed: Canvas main menu assigned
+  at DemoBuilder.Require (System.Boolean condition, System.String message) [0x00014] in C:\1Project\project_godot\animal\ValidationProject\Assets\Editor\DemoBuilder.cs:393 
+  at DemoBuilder.Validate () [0x0053d] in C:\1Project\project_godot\animal\ValidationProject\Assets\Editor\DemoBuilder.cs:357 
+  at DemoBuilder.BuildWindows () [0x0000f] in C:\1Project\project_godot\animal\ValidationProject\Assets\Editor\DemoBuilder.cs:399 
+
+(Filename: Assets/Editor/DemoBuilder.cs Line: 393)
+
+executeMethod method DemoBuilder.BuildWindows threw exception.
+Exiting without the bug reporter. Application will terminate with return code 1

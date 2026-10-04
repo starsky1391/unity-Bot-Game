@@ -1,0 +1,37 @@
+﻿%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dd9a35195ae2fe4e864affbeb608aff, type: 3}
+  m_Name: Room0
+  m_EditorClassIdentifier: 
+  origin: {x: 0, y: 0}
+  checkpointPosition: {x: 2.1276596, y: 0.72727275}
+  outline:
+  - {x: 0, y: 0}
+  - {x: 20, y: 0}
+  - {x: 20, y: 4.3636365}
+  - {x: 17.872341, y: 4.3636365}
+  - {x: 17.872341, y: 8}
+  - {x: 13.617022, y: 8}
+  - {x: 13.617022, y: 4.3636365}
+  - {x: 8.085107, y: 4.3636365}
+  - {x: 8.085107, y: 5.818182}
+  - {x: 5.531915, y: 5.818182}
+  - {x: 5.531915, y: 4.3636365}
+  - {x: 0, y: 4.3636365}
+  exits:
+  - targetRoom: 1
+    position: {x: 20, y: 1}
+    direction: {x: 1, y: 0}
+  merchants:
+  - id: merchant_arli
+    title: "\u963F\u783E"
+    position: {x: 6.382979, y: 0.5818182}

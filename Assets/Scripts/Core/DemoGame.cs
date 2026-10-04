@@ -1,0 +1,464 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using UnityEngine;
+
+namespace HollowDemo
+{
+    public enum GameScreen { MainMenu, ConfirmNew, None, Map, Bag, Pause, Settings, Dialogue, Shop }
+
+    [DefaultExecutionOrder(-100)]
+    public sealed class DemoGame : MonoBehaviour
+    {
+        public static DemoGame Instance { get; private set; }
+        public PlayerMotor Player { get; private set; }
+        [System.NonSerialized] public Inventory inventory = new Inventory();
+        public WorldMap World { get; private set; }
+        public Npc[] Npcs { get; private set; }
+        public BossArena[] BossArenas { get; private set; }
+        public BossArena ActiveBoss { get; set; }
+        public GameScreen Screen { get; private set; } = GameScreen.MainMenu;
+        public bool Paused => Screen != GameScreen.None || Transitioning;
+        public bool Transitioning { get; private set; }
+        public float Fade { get; private set; }
+        public bool HasRun { get; private set; }
+        public bool Completed { get; private set; }
+        public readonly MapFog MapFog = new MapFog();
+        public ItemDefinition[] EquippedItems { get; private set; } = new ItemDefinition[3];
+        public int SelectedEquipment { get; private set; }
+        bool mapDirty;
+        float nextMapSave;
+        public Checkpoint[] Checkpoints { get; private set; }
+        public EnemyBrain[] Enemies { get; private set; }
+        public Interactable Nearby { get; private set; }
+        public Npc SpeakingNpc { get; private set; }
+        public int DialogueNode { get; private set; }
+        public string Notice { get; private set; }
+        public float NoticeUntil { get; private set; }
+        public float Volume { get; private set; }
+        GameScreen settingsReturn;
+        Pickup[] pickups;
+        int checkpointRoom = -1;
+        string checkpointId;
+        readonly HashSet<string> activatedCheckpointIds = new HashSet<string>();
+        readonly HashSet<int> activatedCheckpoints = new HashSet<int>();
+        readonly HashSet<string> collectedPickups = new HashSet<string>();
+        readonly HashSet<string> defeatedEnemies = new HashSet<string>();
+        readonly HashSet<string> discoveredLandmarks = new HashSet<string>();
+        ItemDefinition[] items;
+
+        void Awake()
+        {
+            Instance = this;
+            Time.timeScale = 0;
+            Physics2D.gravity = new Vector2(0, -9.81f);
+            Physics2D.IgnoreLayerCollision(9, 10);
+            Physics2D.IgnoreLayerCollision(10, 10);
+            Volume = PlayerPrefs.GetFloat("MasterVolume", 1);
+            AudioListener.volume = Volume;
+            if (!Application.isBatchMode) UnityEngine.Screen.fullScreen = PlayerPrefs.GetInt("FullScreen", 0) == 1;
+        }
+
+        void Start()
+        {
+            Player = FindObjectOfType<PlayerMotor>();
+            World = FindObjectOfType<WorldMap>();
+            if (World == null)
+            {
+                ShowNotice("请退出运行，使用「洞穴 Demo/打开整体地图」重新打开场景。");
+                Debug.LogWarning("当前打开的是旧房间场景，未找到整体地图；已阻止进入黑屏过渡。");
+                return;
+            }
+            Checkpoints = World.GetComponentsInChildren<Checkpoint>(true);
+            BossArenas = World.GetComponentsInChildren<BossArena>(true);
+            Enemies = World.GetComponentsInChildren<EnemyBrain>(true).Where(e => e.GetComponentInParent<BossArena>() == null).ToArray();
+            pickups = World.GetComponentsInChildren<Pickup>(true);
+            Npcs = World.GetComponentsInChildren<Npc>(true);
+            items = Resources.LoadAll<ItemDefinition>("Items");
+        }
+
+        void Update()
+        {
+            if (Player == null || Player.Dead || Transitioning) return;
+            if (Screen == GameScreen.MainMenu || Screen == GameScreen.ConfirmNew) return;
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (Screen == GameScreen.Settings) SetScreen(settingsReturn);
+                else SetScreen(Screen == GameScreen.None ? GameScreen.Pause : GameScreen.None);
+                return;
+            }
+            if (Screen == GameScreen.None || Screen == GameScreen.Map || Screen == GameScreen.Bag)
+            {
+                if (Input.GetKeyDown(KeyCode.M)) Toggle(GameScreen.Map);
+                if (Input.GetKeyDown(KeyCode.B)) Toggle(GameScreen.Bag);
+            }
+            if (Paused) return;
+            if (Input.GetKeyDown(KeyCode.Q)) CycleEquipment();
+            if (Input.GetKeyDown(KeyCode.F)) UseEquippedItem();
+            if (mapDirty && Time.unscaledTime >= nextMapSave) SaveProgress();
+            foreach (var npc in Npcs)
+                if (!string.IsNullOrEmpty(npc.mapLandmarkId) && Vector2.Distance(Player.transform.position, npc.transform.position) <= 5 && discoveredLandmarks.Add(npc.mapLandmarkId))
+                    SaveProgress();
+            Nearby = FindObjectsOfType<Interactable>()
+                .Where(p => Vector2.Distance(p.transform.position, Player.transform.position) <= p.interactionRange)
+                .OrderBy(p => Vector2.Distance(p.transform.position, Player.transform.position)).FirstOrDefault();
+            if (Nearby != null && Input.GetKeyDown(KeyCode.E)) Nearby.Interact(this);
+            if (World.finish != null && !Completed && BossArenas.All(a => EnemyDefeated(a.boss.persistentId)) && Vector2.Distance(Player.transform.position, World.finish.position) < 2)
+            {
+                Completed = true;
+                ShowNotice("已抵达终点！你仍可继续探索。");
+                SaveProgress();
+            }
+        }
+
+        public void RevealCameraMap(Camera camera)
+        {
+            if (World != null && HasRun) mapDirty |= MapFog.Reveal(0, World.MapView(camera));
+        }
+
+        public void SetScreen(GameScreen screen)
+        {
+            Screen = screen;
+            Time.timeScale = Paused ? 0 : 1;
+            if (Player != null) Player.ClearInput();
+            Nearby = null;
+        }
+        public void Toggle(GameScreen screen) => SetScreen(Screen == screen ? GameScreen.None : screen);
+        public void OpenSettings() { settingsReturn = Screen; SetScreen(GameScreen.Settings); }
+        public void CloseSettings() => SetScreen(settingsReturn);
+
+        public void SetVolume(float value)
+        {
+            Volume = value;
+            AudioListener.volume = value;
+            PlayerPrefs.SetFloat("MasterVolume", value);
+            PlayerPrefs.Save();
+        }
+        public void SetFullscreen(bool value)
+        {
+            UnityEngine.Screen.fullScreen = value;
+            PlayerPrefs.SetInt("FullScreen", value ? 1 : 0);
+            PlayerPrefs.Save();
+        }
+
+        public void RequestNewGame()
+        {
+            SetScreen(GameScreen.ConfirmNew);
+        }
+
+        public void NewGame()
+        {
+            if (World == null) { SetScreen(GameScreen.MainMenu); ShowNotice("请先重新打开整体地图场景"); return; }
+            ResetWorld();
+            HasRun = true;
+            SetScreen(GameScreen.None);
+            StartCoroutine(EnterWorld(true));
+        }
+
+        void ResetWorld()
+        {
+            StopAllCoroutines();
+            foreach (var projectile in FindObjectsOfType<Projectile>()) Destroy(projectile.gameObject);
+            MapFog.Clear();
+            EquippedItems = new ItemDefinition[3];
+            SelectedEquipment = 0;
+            mapDirty = false;
+            checkpointRoom = -1;
+            checkpointId = null;
+            activatedCheckpointIds.Clear();
+            activatedCheckpoints.Clear();
+            collectedPickups.Clear();
+            defeatedEnemies.Clear();
+            discoveredLandmarks.Clear();
+            Completed = false;
+            inventory = new Inventory();
+            SpeakingNpc = null;
+        }
+
+        public void ContinueGame()
+        {
+            if (World == null) { SetScreen(GameScreen.MainMenu); ShowNotice("请先重新打开整体地图场景"); return; }
+            try
+            {
+                var data = SaveStore.Read();
+                if (data == null || (data.version != 1 && data.version != 2)) { ShowNotice("存档格式不支持"); return; }
+                ResetWorld();
+                World.RestoreFog(MapFog, data);
+                if (data.equippedItems != null)
+                    for (int i = 0; i < Mathf.Min(3, data.equippedItems.Length); i++)
+                        EquippedItems[i] = items.FirstOrDefault(item => item.id == data.equippedItems[i]);
+                SelectedEquipment = Mathf.Clamp(data.selectedEquipment, 0, 2);
+                activatedCheckpoints.UnionWith(data.activatedCheckpoints);
+                collectedPickups.UnionWith(data.collectedPickups);
+                defeatedEnemies.UnionWith(data.defeatedEnemies ?? System.Array.Empty<string>());
+                discoveredLandmarks.UnionWith(data.discoveredLandmarks ?? System.Array.Empty<string>());
+                checkpointRoom = data.checkpointRoom;
+                checkpointId = data.checkpointId;
+                activatedCheckpointIds.UnionWith(data.activatedCheckpointIds ?? System.Array.Empty<string>());
+                if (activatedCheckpointIds.Count == 0)
+                    activatedCheckpointIds.UnionWith(activatedCheckpoints.Select(id => "checkpoint_" + id));
+                foreach (var stack in data.inventory)
+                {
+                    var item = items.FirstOrDefault(i => i.id == stack.itemId);
+                    if (item != null) inventory.slots[stack.slot] = new Inventory.Slot { item = item, count = stack.count };
+                }
+                Completed = data.completed;
+                RefreshEquipment();
+                HasRun = true;
+                SetScreen(GameScreen.None);
+                StartCoroutine(EnterWorld(true));
+                ShowNotice("已读取存档，从最近的检查点继续");
+            }
+            catch (IOException) { ShowNotice("无法读取存档，请检查文件访问权限"); }
+            catch (System.ArgumentException) { ShowNotice("存档内容损坏，未能读取"); }
+        }
+
+        public void SaveProgress()
+        {
+            if (!HasRun) return;
+            var stacks = new List<SaveData.Stack>();
+            for (int i = 0; i < inventory.slots.Length; i++)
+                if (inventory.slots[i] != null) stacks.Add(new SaveData.Stack
+                { slot = i, itemId = inventory.slots[i].item.id, count = inventory.slots[i].count });
+            var data = new SaveData
+            {
+                checkpointRoom = checkpointRoom,
+                checkpointId = checkpointId,
+                activatedCheckpointIds = activatedCheckpointIds.ToArray(),
+                completed = Completed,
+                exploredRooms = System.Array.Empty<int>(),
+                exploredMapCells = MapFog.Save(),
+                equippedItems = EquippedItems.Select(item => item == null ? null : item.id).ToArray(),
+                selectedEquipment = SelectedEquipment,
+                activatedCheckpoints = activatedCheckpoints.ToArray(),
+                collectedPickups = collectedPickups.ToArray(),
+                defeatedEnemies = defeatedEnemies.ToArray(),
+                discoveredLandmarks = discoveredLandmarks.ToArray(),
+                inventory = stacks.ToArray()
+            };
+            try
+            {
+                SaveStore.Write(data);
+                mapDirty = false;
+                nextMapSave = Time.unscaledTime + 2;
+            }
+            catch (IOException) { ShowNotice("保存失败，请检查磁盘空间或文件访问权限"); }
+            catch (System.UnauthorizedAccessException) { ShowNotice("保存失败：无法访问存档目录"); }
+        }
+
+        public void EquipItem(ItemDefinition item)
+        {
+            if (item.healing <= 0 || inventory.Count(item) == 0) return;
+            int slot = System.Array.IndexOf(EquippedItems, item);
+            if (slot < 0) slot = System.Array.IndexOf(EquippedItems, null);
+            if (slot < 0) slot = SelectedEquipment;
+            EquippedItems[slot] = item;
+            SelectedEquipment = slot;
+            SaveProgress();
+            ShowNotice("已装备：" + item.displayName);
+        }
+
+        public void CycleEquipment()
+        {
+            for (int offset = 1; offset <= 3; offset++)
+            {
+                int slot = (SelectedEquipment + offset) % 3;
+                if (EquippedItems[slot] == null || inventory.Count(EquippedItems[slot]) == 0) continue;
+                SelectedEquipment = slot;
+                SaveProgress();
+                return;
+            }
+        }
+
+        public bool UseEquippedItem()
+        {
+            if (Paused || Player.Dead) return false;
+            var item = EquippedItems[SelectedEquipment];
+            if (item == null) { ShowNotice("请先在背包装备道具"); return false; }
+            int slot = System.Array.FindIndex(inventory.slots, s => s != null && s.item == item);
+            if (slot < 0) { ShowNotice("道具已用完"); return false; }
+            bool used = inventory.Use(slot, Player);
+            ShowNotice(used ? "已使用：" + item.displayName : "生命已满，未消耗物品");
+            if (used)
+            {
+                RefreshEquipment();
+                SaveProgress();
+            }
+            return used;
+        }
+
+        public void RefreshEquipment()
+        {
+            for (int i = 0; i < EquippedItems.Length; i++)
+                if (EquippedItems[i] != null && !EquippedItems[i].retainWhenEmpty && inventory.Count(EquippedItems[i]) == 0)
+                    EquippedItems[i] = null;
+            var selected = EquippedItems[SelectedEquipment];
+            if (selected != null && inventory.Count(selected) > 0) return;
+            for (int offset = 1; offset < EquippedItems.Length; offset++)
+            {
+                int slot = (SelectedEquipment + offset) % EquippedItems.Length;
+                if (EquippedItems[slot] == null || inventory.Count(EquippedItems[slot]) == 0) continue;
+                SelectedEquipment = slot;
+                break;
+            }
+        }
+
+        public void ActivateCheckpoint(Checkpoint point)
+        {
+            point.activated = true;
+            checkpointRoom = point.roomId;
+            checkpointId = point.persistentId;
+            activatedCheckpointIds.Add(point.persistentId);
+            activatedCheckpoints.Add(point.roomId);
+            point.GetComponent<SpriteRenderer>().color = new Color(.3f, 1, .85f);
+            Player.Heal(Player.maxHealth);
+            SaveProgress();
+            ShowNotice("检查点已记录，生命已恢复，进度已保存");
+        }
+
+        public void ReturnToMenu()
+        {
+            SaveProgress();
+            Player.ReleaseGrapple();
+            SetScreen(GameScreen.MainMenu);
+        }
+
+        public void QuitGame()
+        {
+            SaveProgress();
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
+
+        public void StartDialogue(Npc npc)
+        {
+            SpeakingNpc = npc;
+            DialogueNode = 0;
+            SetScreen(GameScreen.Dialogue);
+        }
+        public void ChooseDialogue(DialogueDefinition.Choice choice)
+        {
+            if (choice.openShop && SpeakingNpc.shop != null) SetScreen(GameScreen.Shop);
+            else if (choice.nextNode >= 0) DialogueNode = choice.nextNode;
+            else SetScreen(GameScreen.None);
+        }
+        public bool Buy(ShopDefinition.Offer offer)
+        {
+            var currency = SpeakingNpc.shop.currency;
+            if (!inventory.TryBuy(offer.item, offer.quantity, currency, offer.price))
+            { ShowNotice("交易失败：晶石不足或背包空间不足"); return false; }
+            SaveProgress();
+            ShowNotice("购入 " + offer.item.displayName + " ×" + offer.quantity);
+            return true;
+        }
+
+        public void ShowNotice(string message) { Notice = message; NoticeUntil = Time.unscaledTime + 3; }
+        public void BeginRespawn() => StartCoroutine(RespawnAfterDelay());
+        IEnumerator RespawnAfterDelay()
+        {
+            int challenge = Checkpoints.OrderBy(p => Vector2.Distance(p.transform.position, Player.transform.position)).First().roomId;
+            ShowNotice("你倒下了，正在返回检查点……");
+            yield return new WaitForSeconds(.7f);
+            foreach (var projectile in FindObjectsOfType<Projectile>()) Destroy(projectile.gameObject);
+            int target = checkpointRoom >= 0 ? checkpointRoom : 0;
+            foreach (var enemy in Enemies)
+                if (enemy.roomId == challenge || enemy.roomId == target)
+                {
+                    defeatedEnemies.Remove(enemy.persistentId);
+                    enemy.ResetEnemy();
+                }
+            yield return EnterWorld(false);
+        }
+
+        public void SpawnProjectile(Vector2 position, Vector2 velocity, int room)
+        {
+            var go = new GameObject("怪物弹丸");
+            go.transform.position = position;
+            go.transform.localScale = Vector3.one * .3f;
+            var sprite = go.AddComponent<SpriteRenderer>();
+            sprite.sprite = Resources.Load<Sprite>("Sprites/Circle");
+            sprite.color = new Color(1, .4f, .2f);
+            sprite.sortingOrder = 5;
+            var projectile = go.AddComponent<Projectile>();
+            projectile.velocity = velocity;
+            projectile.roomId = room;
+            go.transform.SetParent(World.transform, true);
+        }
+        public bool CheckpointActivated(string id) => activatedCheckpointIds.Contains(id);
+        public void RecordPickup(string id) => collectedPickups.Add(id);
+        public bool PickupCollected(string id) => collectedPickups.Contains(id);
+        public bool LandmarkDiscovered(string id) => discoveredLandmarks.Contains(id);
+        public bool EnemyDefeated(string id) => defeatedEnemies.Contains(id);
+        public void RecordEnemyDeath(string id)
+        {
+            if (!defeatedEnemies.Add(id)) return;
+            foreach (var arena in BossArenas)
+                if (arena.boss.persistentId == id) arena.Victory();
+            SaveProgress();
+        }
+
+        IEnumerator EnterWorld(bool resetActors)
+        {
+            Transitioning = true;
+            Time.timeScale = 0;
+            Player.ClearInput();
+            Player.ReleaseGrapple();
+            var body = Player.GetComponent<Rigidbody2D>();
+            body.simulated = false;
+            yield return FadeTo(1);
+            if (resetActors)
+                foreach (var enemy in Enemies)
+                {
+                    enemy.ResetEnemy();
+                    if (defeatedEnemies.Contains(enemy.persistentId)) enemy.gameObject.SetActive(false);
+                }
+            foreach (var arena in BossArenas) arena.ResetEncounter();
+            foreach (var pickup in pickups) pickup.gameObject.SetActive(!collectedPickups.Contains(pickup.persistentId));
+            foreach (var point in Checkpoints)
+            {
+                point.activated = activatedCheckpointIds.Contains(point.persistentId);
+                point.GetComponent<SpriteRenderer>().color = point.activated ? new Color(.3f, 1, .85f) : new Color(.25f, .4f, .5f);
+            }
+            SpeakingNpc = null;
+            var checkpoint = Checkpoints.FirstOrDefault(p => p.persistentId == checkpointId);
+            if (checkpoint == null && checkpointRoom >= 0) checkpoint = Checkpoints.FirstOrDefault(p => p.roomId == checkpointRoom);
+            Transform spawn = checkpoint == null ? World.startPoint : checkpoint.spawnPoint;
+            if (!World.TryGetSpawn(spawn, out var position))
+            {
+                HasRun = false;
+                Transitioning = false;
+                Fade = 0;
+                SetScreen(GameScreen.MainMenu);
+                ShowNotice("出生点没有安全地面，请调整整体地图下的起点或检查点重生点。");
+                Debug.LogWarning("Spawn blocked: " + spawn.name + " at " + spawn.position);
+                yield break;
+            }
+            Player.Respawn(position);
+            Physics2D.SyncTransforms();
+            FindObjectOfType<CameraFollow>().Snap();
+            SaveProgress();
+            yield return FadeTo(0);
+            body.simulated = true;
+            Transitioning = false;
+            Time.timeScale = Screen == GameScreen.None ? 1 : 0;
+        }
+
+        IEnumerator FadeTo(float target)
+        {
+            while (!Mathf.Approximately(Fade, target))
+            {
+                Fade = Mathf.MoveTowards(Fade, target, Time.unscaledDeltaTime / .16f);
+                yield return null;
+            }
+        }
+        void OnApplicationQuit() => SaveProgress();
+        void OnDestroy() { Time.timeScale = 1; if (Instance == this) Instance = null; }
+    }
+}
+
+
+

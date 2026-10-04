@@ -1,0 +1,625 @@
+ScriptsOnlyBuild:
+  usedScripts:
+    Assembly-CSharp:
+    - HollowDemo.ItemDefinition
+    Assembly-CSharp.dll:
+    - HollowDemo.BossArena
+    - HollowDemo.BossCanvas
+    - HollowDemo.CameraFollow
+    - HollowDemo.Checkpoint
+    - HollowDemo.DemoGame
+    - HollowDemo.DemoUI
+    - HollowDemo.DialogueCanvas
+    - HollowDemo.DialogueDefinition
+    - HollowDemo.EnemyBrain
+    - HollowDemo.GrapplePoint
+    - HollowDemo.GroundSurface
+    - HollowDemo.ItemDefinition
+    - HollowDemo.MainMenuCanvas
+    - HollowDemo.MapCanvasGraphic
+    - HollowDemo.Npc
+    - HollowDemo.Pickup
+    - HollowDemo.PlayerHudCanvas
+    - HollowDemo.PlayerMotor
+    - HollowDemo.ShopDefinition
+    - HollowDemo.ShopOfferView
+    - HollowDemo.WorldLabel
+    - HollowDemo.WorldMap
+    UnityEngine.UI.dll:
+    - UnityEngine.EventSystems.EventSystem
+    - UnityEngine.EventSystems.StandaloneInputModule
+    - UnityEngine.UI.Button
+    - UnityEngine.UI.CanvasScaler
+    - UnityEngine.UI.ContentSizeFitter
+    - UnityEngine.UI.GraphicRaycaster
+    - UnityEngine.UI.HorizontalLayoutGroup
+    - UnityEngine.UI.Image
+    - UnityEngine.UI.LayoutElement
+    - UnityEngine.UI.Outline
+    - UnityEngine.UI.RectMask2D
+    - UnityEngine.UI.ScrollRect
+    - UnityEngine.UI.Slider
+    - UnityEngine.UI.Text
+    - UnityEngine.UI.Toggle
+    - UnityEngine.UI.VerticalLayoutGroup
+  serializedClasses:
+    Assembly-CSharp:
+    - HollowDemo.DemoUI/ScreenPanel
+    - HollowDemo.DialogueDefinition/Choice
+    - HollowDemo.DialogueDefinition/Node
+    - HollowDemo.ShopDefinition/Offer
+    - HollowDemo.WorldMap/LegacyFogRegion
+    UnityEngine.CoreModule:
+    - UnityEngine.Events.ArgumentCache
+    - UnityEngine.Events.PersistentCallGroup
+    - UnityEngine.Events.PersistentListenerMode
+    - UnityEngine.RectOffset
+    UnityEngine.UI:
+    - UnityEngine.UI.AnimationTriggers
+    - UnityEngine.UI.Button/ButtonClickedEvent
+    - UnityEngine.UI.ColorBlock
+    - UnityEngine.UI.FontData
+    - UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
+    - UnityEngine.UI.Navigation
+    - UnityEngine.UI.ScrollRect/ScrollRectEvent
+    - UnityEngine.UI.Slider/SliderEvent
+    - UnityEngine.UI.SpriteState
+    - UnityEngine.UI.Toggle/ToggleEvent
+  methodsToPreserve:
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.DialogueCanvas
+    methodName: Close
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.DemoUI
+    methodName: ReturnToDialogue
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.DemoUI
+    methodName: Resume
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.DemoUI
+    methodName: EquipSelected
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.DemoUI
+    methodName: UseSelected
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.DemoUI
+    methodName: Resume
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.MapCanvasGraphic
+    methodName: Recenter
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.DemoUI
+    methodName: CloseSettings
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.DemoUI
+    methodName: SetFullscreen
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.DemoUI
+    methodName: SetVolume
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.DemoUI
+    methodName: Quit
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.DemoUI
+    methodName: ReturnToMenu
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.DemoUI
+    methodName: Settings
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.DemoUI
+    methodName: Resume
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.MainMenuCanvas
+    methodName: Settings
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.MainMenuCanvas
+    methodName: CancelNew
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.MainMenuCanvas
+    methodName: Quit
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.MainMenuCanvas
+    methodName: ConfirmNew
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.MainMenuCanvas
+    methodName: ContinueGame
+  - assembly: Assembly-CSharp
+    fullTypeName: HollowDemo.MainMenuCanvas
+    methodName: NewGame
+  sceneClasses:
+    Assets/Scenes/HollowGeometry.unity:
+    - Class: 1
+      Script: {instanceID: 0}
+    - Class: 4
+      Script: {instanceID: 0}
+    - Class: 20
+      Script: {instanceID: 0}
+    - Class: 21
+      Script: {instanceID: 0}
+    - Class: 28
+      Script: {instanceID: 0}
+    - Class: 48
+      Script: {instanceID: 0}
+    - Class: 50
+      Script: {instanceID: 0}
+    - Class: 61
+      Script: {instanceID: 0}
+    - Class: 62
+      Script: {instanceID: 0}
+    - Class: 81
+      Script: {instanceID: 0}
+    - Class: 104
+      Script: {instanceID: 0}
+    - Class: 114
+      Script: {instanceID: 1508}
+    - Class: 114
+      Script: {instanceID: 1530}
+    - Class: 114
+      Script: {instanceID: 1544}
+    - Class: 114
+      Script: {instanceID: 1560}
+    - Class: 114
+      Script: {instanceID: 1578}
+    - Class: 114
+      Script: {instanceID: 1588}
+    - Class: 114
+      Script: {instanceID: 1628}
+    - Class: 114
+      Script: {instanceID: 1658}
+    - Class: 114
+      Script: {instanceID: 1676}
+    - Class: 114
+      Script: {instanceID: 1700}
+    - Class: 114
+      Script: {instanceID: 1704}
+    - Class: 114
+      Script: {instanceID: 1720}
+    - Class: 114
+      Script: {instanceID: 1724}
+    - Class: 114
+      Script: {instanceID: 1738}
+    - Class: 114
+      Script: {instanceID: 1744}
+    - Class: 114
+      Script: {instanceID: 1752}
+    - Class: 114
+      Script: {instanceID: 1762}
+    - Class: 114
+      Script: {instanceID: 1770}
+    - Class: 114
+      Script: {instanceID: 1772}
+    - Class: 114
+      Script: {instanceID: 1778}
+    - Class: 114
+      Script: {instanceID: 1790}
+    - Class: 114
+      Script: {instanceID: 1802}
+    - Class: 114
+      Script: {instanceID: 1816}
+    - Class: 114
+      Script: {instanceID: 1822}
+    - Class: 114
+      Script: {instanceID: 1880}
+    - Class: 114
+      Script: {instanceID: 1882}
+    - Class: 114
+      Script: {instanceID: 1892}
+    - Class: 114
+      Script: {instanceID: 1906}
+    - Class: 114
+      Script: {instanceID: 1952}
+    - Class: 114
+      Script: {instanceID: 1954}
+    - Class: 114
+      Script: {instanceID: 1978}
+    - Class: 114
+      Script: {instanceID: 1988}
+    - Class: 114
+      Script: {instanceID: 1998}
+    - Class: 114
+      Script: {instanceID: 2006}
+    - Class: 114
+      Script: {instanceID: 2012}
+    - Class: 114
+      Script: {instanceID: 2026}
+    - Class: 114
+      Script: {instanceID: 2040}
+    - Class: 114
+      Script: {instanceID: 2042}
+    - Class: 115
+      Script: {instanceID: 0}
+    - Class: 128
+      Script: {instanceID: 0}
+    - Class: 157
+      Script: {instanceID: 0}
+    - Class: 196
+      Script: {instanceID: 0}
+    - Class: 212
+      Script: {instanceID: 0}
+    - Class: 213
+      Script: {instanceID: 0}
+    - Class: 222
+      Script: {instanceID: 0}
+    - Class: 223
+      Script: {instanceID: 0}
+    - Class: 224
+      Script: {instanceID: 0}
+    - Class: 225
+      Script: {instanceID: 0}
+  scriptHashData:
+  - hash:
+      serializedVersion: 2
+      Hash: 540882762544409cc4530e60db00e951
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: CanvasScaler
+  - hash:
+      serializedVersion: 2
+      Hash: d5cd7f207e91ca8336c65a577a6fb2a0
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: ScrollRect
+  - hash:
+      serializedVersion: 2
+      Hash: bfe0359c1d37d2162edd6a1d79408c09
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: WorldLabel
+  - hash:
+      serializedVersion: 2
+      Hash: 28fd3d045acc780719a17f02073eb448
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: InputField
+  - hash:
+      serializedVersion: 2
+      Hash: 44109ec1e9cad29fb677d180128b9cc1
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: RoomVolume
+  - hash:
+      serializedVersion: 2
+      Hash: dd9dda1dfd39e605c49e72003342ef5d
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: Image
+  - hash:
+      serializedVersion: 2
+      Hash: 7053e305cdc1eb560f4c3be49d3b5136
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.EventSystems
+    className: PhysicsRaycaster
+  - hash:
+      serializedVersion: 2
+      Hash: d0cdd713f9bf4e6a625d9e7804deca42
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.EventSystems
+    className: EventTrigger
+  - hash:
+      serializedVersion: 2
+      Hash: f58ff96b10f6094241d8df33c312a6ae
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: ItemDefinition
+  - hash:
+      serializedVersion: 2
+      Hash: d41ab9b5ea92474f9c0a6937a0607ce1
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: ContentSizeFitter
+  - hash:
+      serializedVersion: 2
+      Hash: fc138d15892459d3352a5b469bc7f3f7
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: SmokeProbe
+  - hash:
+      serializedVersion: 2
+      Hash: 1a680d9a08de79b0d2c779e78c9843b4
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: RectMask2D
+  - hash:
+      serializedVersion: 2
+      Hash: 5ebc58ec194dd44630b25fcc270ad4af
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: Dropdown
+  - hash:
+      serializedVersion: 2
+      Hash: 20a120e55ad3ab65556328d5fd8309dd
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: Outline
+  - hash:
+      serializedVersion: 2
+      Hash: 0df68a1d6ad17ef3729febaddf2783b1
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: RoomExit
+  - hash:
+      serializedVersion: 2
+      Hash: cb09ce93205129311bf75201c844fa80
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: EnemyBrain
+  - hash:
+      serializedVersion: 2
+      Hash: ec453bfef82b1fd840149816d34571d6
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: RoomContent
+  - hash:
+      serializedVersion: 2
+      Hash: 57019237cf25b0ba86b47c86df4bbde0
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: BossCanvas
+  - hash:
+      serializedVersion: 2
+      Hash: 10c17b309bdca62b4d7fbaf113ed4ca0
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: Toggle
+  - hash:
+      serializedVersion: 2
+      Hash: 60c2926bebe0050399bc08e5766eabf5
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: RoomMapDefinition
+  - hash:
+      serializedVersion: 2
+      Hash: aa776af4e41186e8931d7e68f0742505
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: DemoGame
+  - hash:
+      serializedVersion: 2
+      Hash: 8dff8e9853297d341afa0c11f9091b59
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: LayoutElement
+  - hash:
+      serializedVersion: 2
+      Hash: f64ca651737321a809bee464e40a454b
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: DialogueCanvas
+  - hash:
+      serializedVersion: 2
+      Hash: 33656f83bb0079184b2206a69690ec46
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: AspectRatioFitter
+  - hash:
+      serializedVersion: 2
+      Hash: b5007673bbbdb9d12597a1d8201370f5
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: Text
+  - hash:
+      serializedVersion: 2
+      Hash: e2cd94288d766521f772d5055d1f8ad9
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: CameraFollow
+  - hash:
+      serializedVersion: 2
+      Hash: 00bbd9db8634496d079d17711b2ff7c4
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: Selectable
+  - hash:
+      serializedVersion: 2
+      Hash: e987953190eb4c12cf19df790566dc2c
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.EventSystems
+    className: EventSystem
+  - hash:
+      serializedVersion: 2
+      Hash: 9104447b683bf70406fa01f12ecb564a
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.EventSystems
+    className: StandaloneInputModule
+  - hash:
+      serializedVersion: 2
+      Hash: 72703c9d29ee6387c7bdd6855785bf17
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: Checkpoint
+  - hash:
+      serializedVersion: 2
+      Hash: 4878e735441f4041539853759559c86f
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: VerticalLayoutGroup
+  - hash:
+      serializedVersion: 2
+      Hash: a90f6a00b23520788be7d89ee3b0773d
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: Scrollbar
+  - hash:
+      serializedVersion: 2
+      Hash: 53e329840e6d03aebec76623c3b054db
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: Slider
+  - hash:
+      serializedVersion: 2
+      Hash: cbf379c7b443b497bb9efe689dc7241e
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: RoomEntrance
+  - hash:
+      serializedVersion: 2
+      Hash: 33f160a5c07e580c29aba2bd1e4db811
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: HorizontalLayoutGroup
+  - hash:
+      serializedVersion: 2
+      Hash: d8f4ef61e709eca1572f5e1f5cf4f291
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: GroundSurface
+  - hash:
+      serializedVersion: 2
+      Hash: e9426ff89bb406da4e6eb80187684475
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: GrapplePoint
+  - hash:
+      serializedVersion: 2
+      Hash: 8703b6ae2b0eefd9dafbc44d8d333fb1
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: Shadow
+  - hash:
+      serializedVersion: 2
+      Hash: cf32d98954e63b8e30e9334b152e9b8e
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.EventSystems
+    className: BaseInput
+  - hash:
+      serializedVersion: 2
+      Hash: a1ac4c50e55874de16eee3db71aa9784
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: ToggleGroup
+  - hash:
+      serializedVersion: 2
+      Hash: b747f5d40674055dd70e18552f1b0447
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: Mask
+  - hash:
+      serializedVersion: 2
+      Hash: 1ab136900c0edaeeb49424c852595030
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: RawImage
+  - hash:
+      serializedVersion: 2
+      Hash: 915204dac8acad99f076d6e72ada0a0f
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: Button
+  - hash:
+      serializedVersion: 2
+      Hash: 8f755c01dcdc8e2affa26db802f2dd10
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: PlayerHudCanvas
+  - hash:
+      serializedVersion: 2
+      Hash: ebdbfb3906dc6731ef9098f8eca8b333
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: ShopDefinition
+  - hash:
+      serializedVersion: 2
+      Hash: cff5befa2e5e20de67df2aa04474c8a4
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: DialogueDefinition
+  - hash:
+      serializedVersion: 2
+      Hash: 5717a40bd739fb6414b37169d9cd93c6
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: Projectile
+  - hash:
+      serializedVersion: 2
+      Hash: 8dc40a01667ca02b3354a4e7a61be082
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: GridLayoutGroup
+  - hash:
+      serializedVersion: 2
+      Hash: 4fcf0bb4aff1d14a1dfcdedc4b07bd05
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.EventSystems
+    className: TouchInputModule
+  - hash:
+      serializedVersion: 2
+      Hash: e8d390bd9ecacc453a7500b90d0c0292
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.EventSystems
+    className: Physics2DRaycaster
+  - hash:
+      serializedVersion: 2
+      Hash: 5ed53371b00bd7a74bfc969de8b34dfe
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: Npc
+  - hash:
+      serializedVersion: 2
+      Hash: 99484bebd8dc451363cb0fac592e485e
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: ShopOfferView
+  - hash:
+      serializedVersion: 2
+      Hash: afb7b65d28d5a7423e69a1b076be0064
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: PositionAsUV1
+  - hash:
+      serializedVersion: 2
+      Hash: c28912c24b614c31c50cebcd10743c6d
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: Pickup
+  - hash:
+      serializedVersion: 2
+      Hash: 79cb6da72deae0976ff1fd5e14c5e1e7
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: BossArena
+  - hash:
+      serializedVersion: 2
+      Hash: 9951a00a205742ed454509a5918a81ab
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: MainMenuCanvas
+  - hash:
+      serializedVersion: 2
+      Hash: cebf76cbf70ef251d22a33313e6a7497
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: MapCanvasGraphic
+  - hash:
+      serializedVersion: 2
+      Hash: 19fe9fff485c8c56afc4b786e4e08f47
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: BossSmokeProbe
+  - hash:
+      serializedVersion: 2
+      Hash: 9b2c5dcfb043d3725e116fd1efb86316
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: WorldMap
+  - hash:
+      serializedVersion: 2
+      Hash: 5a4aa2850fe11587f47e34c270c7fd22
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: GraphicRaycaster
+  - hash:
+      serializedVersion: 2
+      Hash: 69ad82dbe8efa52b041fb8c2a7b0523b
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: DemoUI
+  - hash:
+      serializedVersion: 2
+      Hash: e096d9f9336ca043874acaf63c2361aa
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: PlayerMotor
+  platform: 19
+  scenePathNames:
+  - Assets/Scenes/HollowGeometry.unity
+  playerPath: C:/1Project/project_godot/animal/ValidationProject/Builds/Windows/HollowGeometry.exe

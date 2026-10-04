@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/HollowGeometry.unity
+    guid: 9cf230546aa5eba4a907ad9f25e02452
+  - enabled: 1
+    path: Assets/Scenes/Rooms/Room0.unity
+    guid: 52b7689ec98fa0e4385c283cd7c6991e
+  - enabled: 1
+    path: Assets/Scenes/Rooms/Room1.unity
+    guid: 3edf776b56e2ca4479c4423f23fd3de4
+  - enabled: 1
+    path: Assets/Scenes/Rooms/Room2.unity
+    guid: 485a1dfac55f36a4891c313c8cd0c807
+  - enabled: 1
+    path: Assets/Scenes/Rooms/Room3.unity
+    guid: 4d4b53d696a6b1b4cb8dc5b22a92aca1
+  - enabled: 1
+    path: Assets/Scenes/Rooms/Room4.unity
+    guid: 47f8d35be81905d429f80f84d466f377
+  m_configObjects: {}

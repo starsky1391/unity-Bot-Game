@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b0cf1f306490b442a8895bd58a33f7e, type: 3}
+  m_Name: MerchantShop
+  m_EditorClassIdentifier: 
+  displayName: "\u963F\u783E\u7684\u5C0F\u94FA"
+  currency: {fileID: 11400000, guid: ab6a408b0363fc54289050724a4e7b03, type: 2}
+  offers:
+  - item: {fileID: 11400000, guid: 72577b6616417764994c9d9641013efe, type: 2}
+    quantity: 1
+    price: 5
+  - item: {fileID: 11400000, guid: a1da4848934cbb143a05b7f8da8d587c, type: 2}
+    quantity: 1
+    price: 12

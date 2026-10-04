@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b8d6de2c0b0e0149b368952cb2dee57, type: 3}
+  m_Name: MerchantDialogue
+  m_EditorClassIdentifier: 
+  nodes:
+  - speaker: "\u6E38\u5546\u963F\u783E"
+    text: "\u65C5\u884C\u8005\uFF0C\u6B22\u8FCE\uFF01\u5E26\u6765\u6D1E\u7A74\u6676\u77F3\u4E86\u5417\uFF1F\u6211\u8FD9\u91CC\u6709\u6062\u590D\u751F\u547D\u7684\u836F\u54C1\u3002"
+    choices:
+    - text: "\u770B\u770B\u5546\u54C1"
+      nextNode: -1
+      openShop: 1
+    - text: "\u6676\u77F3\u5728\u54EA\u91CC\uFF1F"
+      nextNode: 1
+      openShop: 0
+    - text: "\u544A\u8F9E"
+      nextNode: -1
+      openShop: 0
+  - speaker: "\u6E38\u5546\u963F\u783E"
+    text: "\u9AD8\u53F0\u652F\u8DEF\u4E0A\u5E38\u6709\u6676\u77F3\u3002\u80CC\u5305\u91CC\u6BCF\u683C\u6700\u591A\u5806\u53E0
+      99 \u4E2A\u3002\u5148\u786E\u8BA4\u80CC\u5305\u6709\u7A7A\u95F4\u518D\u4E70\u4E1C\u897F\u5427\u3002"
+    choices:
+    - text: "\u56DE\u5230\u521A\u624D\u7684\u8BDD\u9898"
+      nextNode: 0
+      openShop: 0
+    - text: "\u8C22\u8C22\uFF0C\u544A\u8F9E"
+      nextNode: -1
+      openShop: 0
