@@ -37,18 +37,9 @@ public sealed class ScenePrefabIds : AssetModificationProcessor
         for (int i = 0; i < SceneManager.sceneCount; i++)
         {
             var scene = SceneManager.GetSceneAt(i);
-            if (!scene.isLoaded || !scene.path.EndsWith(".unity")) continue;
+            if (!scene.isLoaded || (!string.IsNullOrEmpty(scene.path) && !scene.path.EndsWith(".unity"))) continue;
             var room = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<RoomContent>(true)).SingleOrDefault();
-            var world = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<WorldMap>(true)).SingleOrDefault();
-            if (room == null && world == null) continue;
-            Transform container = world != null ? world.transform : room.transform;
-            foreach (var root in scene.GetRootGameObjects())
-                if (root != container.gameObject && (root.GetComponent<GroundSurface>() || root.GetComponent<Pickup>() || root.GetComponent<GrapplePoint>() || root.GetComponent<Checkpoint>() || root.GetComponent<EnemyBrain>()))
-                {
-                    root.transform.SetParent(container, true);
-                    EditorSceneManager.MarkSceneDirty(scene);
-                }
-            foreach (var pickup in container.GetComponentsInChildren<Pickup>(true))
+            foreach (var pickup in scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Pickup>(true)))
                 if (string.IsNullOrEmpty(pickup.persistentId) || !pickups.Add(pickup.persistentId))
                 {
                     pickup.persistentId = Guid.NewGuid().ToString("N");
@@ -57,7 +48,7 @@ public sealed class ScenePrefabIds : AssetModificationProcessor
                     PrefabUtility.RecordPrefabInstancePropertyModifications(pickup);
                     EditorSceneManager.MarkSceneDirty(scene);
                 }
-            foreach (var point in container.GetComponentsInChildren<Checkpoint>(true))
+            foreach (var point in scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Checkpoint>(true)))
             {
                 bool changed = room != null && point.roomId != room.roomId;
                 if (room != null) point.roomId = room.roomId;

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,7 +6,9 @@ namespace HollowDemo
 {
     public sealed class PlayerHudCanvas : MonoBehaviour
     {
-        public GameObject panel;
+        public GameObject panel, crystalPanel;
+        public Text crystalCount;
+        public Image manaFill;
         public Image[] healthSquares;
         public Color filledHealthColor = new Color(.45f, .92f, 1);
         public Color emptyHealthColor = new Color(.19f, .24f, .3f);
@@ -22,6 +24,7 @@ namespace HollowDemo
             canvas.worldCamera = Camera.main;
             canvas.planeDistance = 1;
             squares.AddRange(healthSquares);
+            crystalCount.font = ChineseFont.Shared;
             EnsureItemIndicators();
         }
 
@@ -65,7 +68,10 @@ namespace HollowDemo
             bool visible = game.HasRun && game.Player != null &&
                 (game.Screen == GameScreen.None || game.Screen == GameScreen.Dialogue);
             panel.SetActive(visible);
+            crystalPanel.SetActive(visible);
+            crystalCount.text = game.Crystals.ToString();
             if (!visible) return;
+            manaFill.fillAmount = (float)game.Player.Mana / game.Player.maxMana;
             while (squares.Count < game.Player.maxHealth)
                 squares.Add(Instantiate(healthSquares[0], healthSquares[0].transform.parent));
             for (int i = 0; i < squares.Count; i++)
@@ -78,7 +84,7 @@ namespace HollowDemo
                 var item = game.EquippedItems[(game.SelectedEquipment + i + 2) % 3];
                 itemIcons[i].sprite = item == null ? null : item.icon;
                 itemIcons[i].color = item == null ? Color.clear : item.icon == null ? item.color : Color.white;
-                int count = item == null ? 0 : game.inventory.Count(item);
+                int count = item == null ? 0 : game.ItemCount(item);
                 itemCounts[i].text = item == null ? "" : "×" + count;
                 emptyItemMasks[i].gameObject.SetActive(item != null && count == 0 && item.retainWhenEmpty);
             }

@@ -242,6 +242,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 730216120611280697}
     m_Modifications:
+    - target: {fileID: 3535746236885122244, guid: a8b4700313341e2489e3cf89c83b7967, type: 3}
+      propertyPath: crystalDrops
+      value: 
+      objectReference: {fileID: 11400000, guid: e9bee2ae0d13cc64fae0d727e2bc8f86, type: 2}
     - target: {fileID: 4651478756554126888, guid: a8b4700313341e2489e3cf89c83b7967, type: 3}
       propertyPath: m_Name
       value: ShadowGuard

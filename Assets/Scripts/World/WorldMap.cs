@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 namespace HollowDemo
@@ -11,11 +12,39 @@ namespace HollowDemo
             public Rect oldBounds, mapBounds;
         }
         public Transform startPoint, finish, fallBoundary;
-        public Vector2[] outline;
+        public Vector2[] outline = Array.Empty<Vector2>();
         [Min(.01f)] public float mapScale = .4f;
-        [HideInInspector] public LegacyFogRegion[] legacyFogRegions;
+        [HideInInspector] public LegacyFogRegion[] legacyFogRegions = Array.Empty<LegacyFogRegion>();
+        GroundSurface[] terrain = Array.Empty<GroundSurface>();
+        bool usesCheckpointSpawn;
         public Vector2 MapPosition(Vector3 worldPosition) => (Vector2)transform.InverseTransformPoint(worldPosition) * mapScale;
-        public float FallY => fallBoundary.position.y;
+        public float FallY => fallBoundary != null ? fallBoundary.position.y : terrain.Min(g => g.GetComponent<Collider2D>().bounds.min.y) - 5;
+
+        public bool Initialize(Checkpoint[] checkpoints, GroundSurface[] surfaces, out string error)
+        {
+            error = null;
+            terrain = surfaces.Where(g => g.isActiveAndEnabled && g.GetComponent<Collider2D>().enabled).ToArray();
+            if (terrain.Length == 0) { error = "关卡没有地面，请放入 Ground 或 Platform 预制件。"; return false; }
+            var initial = checkpoints.Where(p => p.isInitialSpawn && p.gameObject.activeInHierarchy).ToArray();
+            if (initial.Length > 1) { error = "多个检查点勾选了初始出生点，请只保留一个。"; return false; }
+            if (initial.Length == 1)
+            {
+                startPoint = initial[0].spawnPoint;
+                usesCheckpointSpawn = true;
+            }
+            else if (usesCheckpointSpawn) startPoint = null;
+            if (startPoint == null) { error = "请放入检查点，勾选初始出生点并配置 Spawn Point。"; return false; }
+            if (outline == null || outline.Length < 3)
+            {
+                Physics2D.SyncTransforms();
+                var bounds = terrain[0].GetComponent<Collider2D>().bounds;
+                foreach (var ground in terrain.Skip(1)) bounds.Encapsulate(ground.GetComponent<Collider2D>().bounds);
+                Vector2 min = transform.InverseTransformPoint(bounds.min - new Vector3(1, 1));
+                Vector2 max = transform.InverseTransformPoint(bounds.max + new Vector3(1, 12));
+                outline = new[] { min, new Vector2(min.x, max.y), max, new Vector2(max.x, min.y) };
+            }
+            return true;
+        }
 
         public Rect MapView(Camera camera)
         {
@@ -34,7 +63,8 @@ namespace HollowDemo
         public bool TryGetSpawn(Transform point, out Vector2 position)
         {
             Physics2D.SyncTransforms();
-            position = point.position;
+            position = point == null ? Vector2.zero : (Vector2)point.position;
+            if (point == null) return false;
             var floor = Physics2D.BoxCast(position + Vector2.up * .1f, new Vector2(.65f, .1f), 0,
                 Vector2.down, 4, 1 << 8);
             if (floor.collider == null || floor.normal.y < .5f) return false;

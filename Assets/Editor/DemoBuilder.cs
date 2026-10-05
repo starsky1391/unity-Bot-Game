@@ -171,6 +171,8 @@ public static class DemoBuilder
         Debug.Log("DEMO_BUILD_OK: scene, player and 10 independent enemy prefabs generated.");
         WorldMapAuthoring.Convert();
         BossAuthoring.Configure();
+        ProgressionAuthoring.Configure();
+        SkillAuthoring.Configure();
         Validate();
     }
 

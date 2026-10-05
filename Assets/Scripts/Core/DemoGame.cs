@@ -6,13 +6,21 @@ using UnityEngine;
 
 namespace HollowDemo
 {
-    public enum GameScreen { MainMenu, ConfirmNew, None, Map, Bag, Pause, Settings, Dialogue, Shop }
+    public enum GameScreen { MainMenu, ConfirmNew, None, Map, Bag, Pause, Settings, Dialogue, Shop, Checkpoint }
 
     [DefaultExecutionOrder(-100)]
     public sealed class DemoGame : MonoBehaviour
     {
         public static DemoGame Instance { get; private set; }
         public PlayerMotor Player { get; private set; }
+        [Min(1)] public int initialFlaskCapacity = 3;
+        public ItemDefinition flaskItem, manaFlaskItem;
+        public int ManaFlaskCapacity { get; private set; }
+        public int ManaFlaskCharges { get; private set; }
+        public int BloodFlaskCapacity => FlaskCapacity - ManaFlaskCapacity;
+        public int FlaskCapacity { get; private set; }
+        public int FlaskCharges { get; private set; }
+        public int Crystals { get; private set; }
         [System.NonSerialized] public Inventory inventory = new Inventory();
         public WorldMap World { get; private set; }
         public Npc[] Npcs { get; private set; }
@@ -52,6 +60,14 @@ namespace HollowDemo
         {
             Instance = this;
             Time.timeScale = 0;
+            var follow = FindObjectOfType<CameraFollow>();
+            if (follow != null)
+            {
+                var gameCamera = follow.GetComponent<Camera>();
+                gameCamera.enabled = true;
+                foreach (var camera in FindObjectsOfType<Camera>())
+                    if (camera != gameCamera && camera.CompareTag("MainCamera")) camera.enabled = false;
+            }
             Physics2D.gravity = new Vector2(0, -9.81f);
             Physics2D.IgnoreLayerCollision(9, 10);
             Physics2D.IgnoreLayerCollision(10, 10);
@@ -63,19 +79,34 @@ namespace HollowDemo
         void Start()
         {
             Player = FindObjectOfType<PlayerMotor>();
-            World = FindObjectOfType<WorldMap>();
-            if (World == null)
-            {
-                ShowNotice("请退出运行，使用「洞穴 Demo/打开整体地图」重新打开场景。");
-                Debug.LogWarning("当前打开的是旧房间场景，未找到整体地图；已阻止进入黑屏过渡。");
-                return;
-            }
-            Checkpoints = World.GetComponentsInChildren<Checkpoint>(true);
-            BossArenas = World.GetComponentsInChildren<BossArena>(true);
-            Enemies = World.GetComponentsInChildren<EnemyBrain>(true).Where(e => e.GetComponentInParent<BossArena>() == null).ToArray();
-            pickups = World.GetComponentsInChildren<Pickup>(true);
-            Npcs = World.GetComponentsInChildren<Npc>(true);
             items = Resources.LoadAll<ItemDefinition>("Items");
+            InitializeLevel();
+        }
+
+        bool InitializeLevel()
+        {
+            Checkpoints = FindObjectsOfType<Checkpoint>();
+            BossArenas = FindObjectsOfType<BossArena>();
+            Enemies = FindObjectsOfType<EnemyBrain>(true)
+                .Where(e => HasActiveParents(e) && e.GetComponentInParent<BossArena>() == null).ToArray();
+            pickups = FindObjectsOfType<Pickup>(true).Where(HasActiveParents).ToArray();
+            Npcs = FindObjectsOfType<Npc>();
+            World = FindObjectOfType<WorldMap>();
+            if (World == null) World = new GameObject("关卡（自动初始化）").AddComponent<WorldMap>();
+            if (!World.Initialize(Checkpoints, FindObjectsOfType<GroundSurface>(true), out string error))
+            {
+                SetScreen(GameScreen.MainMenu);
+                ShowNotice(error);
+                Debug.LogWarning(error);
+                return false;
+            }
+            return true;
+        }
+
+        static bool HasActiveParents(Component component)
+        {
+            // 保留已死亡或已拾取的实例，但排除被整个关闭的旧关卡。
+            return component.transform.parent == null || component.transform.parent.gameObject.activeInHierarchy;
         }
 
         void Update()
@@ -149,8 +180,11 @@ namespace HollowDemo
 
         public void NewGame()
         {
-            if (World == null) { SetScreen(GameScreen.MainMenu); ShowNotice("请先重新打开整体地图场景"); return; }
+            if (!InitializeLevel()) return;
             ResetWorld();
+            FlaskCapacity = initialFlaskCapacity;
+            FlaskCharges = FlaskCapacity;
+            EnsureFlask();
             HasRun = true;
             SetScreen(GameScreen.None);
             StartCoroutine(EnterWorld(true));
@@ -160,6 +194,7 @@ namespace HollowDemo
         {
             StopAllCoroutines();
             foreach (var projectile in FindObjectsOfType<Projectile>()) Destroy(projectile.gameObject);
+            foreach (var orb in FindObjectsOfType<SkillOrb>()) Destroy(orb.gameObject);
             MapFog.Clear();
             EquippedItems = new ItemDefinition[3];
             SelectedEquipment = 0;
@@ -173,16 +208,18 @@ namespace HollowDemo
             discoveredLandmarks.Clear();
             Completed = false;
             inventory = new Inventory();
+            Crystals = 0;
+            FlaskCapacity = FlaskCharges = ManaFlaskCapacity = ManaFlaskCharges = 0;
             SpeakingNpc = null;
         }
 
         public void ContinueGame()
         {
-            if (World == null) { SetScreen(GameScreen.MainMenu); ShowNotice("请先重新打开整体地图场景"); return; }
+            if (!InitializeLevel()) return;
             try
             {
                 var data = SaveStore.Read();
-                if (data == null || (data.version != 1 && data.version != 2)) { ShowNotice("存档格式不支持"); return; }
+                if (data == null || (data.version < 1 || data.version > 4)) { ShowNotice("存档格式不支持"); return; }
                 ResetWorld();
                 World.RestoreFog(MapFog, data);
                 if (data.equippedItems != null)
@@ -201,8 +238,17 @@ namespace HollowDemo
                 foreach (var stack in data.inventory)
                 {
                     var item = items.FirstOrDefault(i => i.id == stack.itemId);
-                    if (item != null) inventory.slots[stack.slot] = new Inventory.Slot { item = item, count = stack.count };
+                    if (item == null) continue;
+                    if (item.kind == ItemKind.Currency) Crystals += stack.count;
+                    else inventory.slots[stack.slot] = new Inventory.Slot { item = item, count = stack.count };
                 }
+                Crystals += data.crystals;
+                FlaskCapacity = data.version >= 3 ? Mathf.Max(1, data.flaskCapacity) : initialFlaskCapacity;
+                FlaskCharges = data.version >= 3 ? Mathf.Clamp(data.flaskCharges, 0, FlaskCapacity) : FlaskCapacity;
+                ManaFlaskCapacity = Mathf.Clamp(data.manaFlaskCapacity, 0, FlaskCapacity);
+                ManaFlaskCharges = Mathf.Clamp(data.manaFlaskCharges, 0, ManaFlaskCapacity);
+                FlaskCharges = Mathf.Min(FlaskCharges, BloodFlaskCapacity);
+                EnsureFlask();
                 Completed = data.completed;
                 RefreshEquipment();
                 HasRun = true;
@@ -223,6 +269,8 @@ namespace HollowDemo
                 { slot = i, itemId = inventory.slots[i].item.id, count = inventory.slots[i].count });
             var data = new SaveData
             {
+                manaFlaskCapacity = ManaFlaskCapacity, manaFlaskCharges = ManaFlaskCharges,
+                flaskCapacity = FlaskCapacity, flaskCharges = FlaskCharges, crystals = Crystals,
                 checkpointRoom = checkpointRoom,
                 checkpointId = checkpointId,
                 activatedCheckpointIds = activatedCheckpointIds.ToArray(),
@@ -247,9 +295,45 @@ namespace HollowDemo
             catch (System.UnauthorizedAccessException) { ShowNotice("保存失败：无法访问存档目录"); }
         }
 
+        void EnsureFlask()
+        {
+            if (inventory.Count(flaskItem) == 0) inventory.TryAdd(flaskItem, 1);
+            if (System.Array.IndexOf(EquippedItems, flaskItem) < 0) EquippedItems[0] = flaskItem;
+        }
+        public int ItemCount(ItemDefinition item) => item.kind == ItemKind.ManaFlask ? ManaFlaskCharges : item.kind == ItemKind.RefillableFlask ? FlaskCharges : item.kind == ItemKind.Currency ? Crystals : inventory.Count(item);
+        public bool TryCollectItem(ItemDefinition item, int count)
+        {
+            if (item.kind == ItemKind.Currency) { Crystals += count; return true; }
+            return inventory.TryAdd(item, count);
+        }
+        public bool UseFlask()
+        {
+            if (Player.Dead || flaskItem.healing <= 0) return false;
+            if (Player.Health >= Player.maxHealth) { ShowNotice("生命已满，未消耗血瓶次数"); return false; }
+            if (FlaskCharges <= 0) { ShowNotice("血瓶已用尽，到检查点互动可补满"); return false; }
+            Player.Heal(flaskItem.healing);
+            FlaskCharges--;
+            SaveProgress();
+            ShowNotice("血瓶恢复了生命，剩余 " + FlaskCharges + " / " + BloodFlaskCapacity);
+            return true;
+        }
+        public bool UseManaFlask()
+        {
+            if (Player.Dead || ManaFlaskCharges <= 0 || Player.Mana >= Player.maxMana || manaFlaskItem.manaRecovery <= 0) return false;
+            Player.RestoreMana(manaFlaskItem.manaRecovery); ManaFlaskCharges--; SaveProgress(); return true;
+        }
+        public void ChangeFlaskAllocation(int delta)
+        {
+            if (Screen != GameScreen.Checkpoint) return;
+            ManaFlaskCapacity = Mathf.Clamp(ManaFlaskCapacity + delta, 0, FlaskCapacity);
+            FlaskCharges = BloodFlaskCapacity; ManaFlaskCharges = ManaFlaskCapacity;
+            if (inventory.Count(manaFlaskItem) == 0) inventory.TryAdd(manaFlaskItem, 1);
+            if (System.Array.IndexOf(EquippedItems, manaFlaskItem) < 0) EquippedItems[1] = manaFlaskItem;
+            SaveProgress();
+        }
         public void EquipItem(ItemDefinition item)
         {
-            if (item.healing <= 0 || inventory.Count(item) == 0) return;
+            if ((item.healing <= 0 && item.kind != ItemKind.ManaFlask) || inventory.Count(item) == 0) return;
             int slot = System.Array.IndexOf(EquippedItems, item);
             if (slot < 0) slot = System.Array.IndexOf(EquippedItems, null);
             if (slot < 0) slot = SelectedEquipment;
@@ -276,6 +360,8 @@ namespace HollowDemo
             if (Paused || Player.Dead) return false;
             var item = EquippedItems[SelectedEquipment];
             if (item == null) { ShowNotice("请先在背包装备道具"); return false; }
+            if (item.kind == ItemKind.RefillableFlask) return UseFlask();
+            if (item.kind == ItemKind.ManaFlask) return UseManaFlask();
             int slot = System.Array.FindIndex(inventory.slots, s => s != null && s.item == item);
             if (slot < 0) { ShowNotice("道具已用完"); return false; }
             bool used = inventory.Use(slot, Player);
@@ -306,6 +392,12 @@ namespace HollowDemo
 
         public void ActivateCheckpoint(Checkpoint point)
         {
+            foreach (var stack in inventory.slots.ToArray())
+                if (stack != null && stack.item.kind == ItemKind.EmptyFlask)
+                { int count = stack.count; FlaskCapacity += count; inventory.TryRemove(stack.item, count); }
+            FlaskCharges = BloodFlaskCapacity; ManaFlaskCharges = ManaFlaskCapacity;
+            EnsureFlask();
+            Player.RestoreMana(Player.maxMana);
             point.activated = true;
             checkpointRoom = point.roomId;
             checkpointId = point.persistentId;
@@ -349,7 +441,14 @@ namespace HollowDemo
         public bool Buy(ShopDefinition.Offer offer)
         {
             var currency = SpeakingNpc.shop.currency;
-            if (!inventory.TryBuy(offer.item, offer.quantity, currency, offer.price))
+            bool purchased;
+            if (currency.kind == ItemKind.Currency)
+            {
+                purchased = offer.price >= 0 && Crystals >= offer.price && inventory.TryAdd(offer.item, offer.quantity);
+                if (purchased) Crystals -= offer.price;
+            }
+            else purchased = inventory.TryBuy(offer.item, offer.quantity, currency, offer.price);
+            if (!purchased)
             { ShowNotice("交易失败：晶石不足或背包空间不足"); return false; }
             SaveProgress();
             ShowNotice("购入 " + offer.item.displayName + " ×" + offer.quantity);
@@ -360,11 +459,14 @@ namespace HollowDemo
         public void BeginRespawn() => StartCoroutine(RespawnAfterDelay());
         IEnumerator RespawnAfterDelay()
         {
-            int challenge = Checkpoints.OrderBy(p => Vector2.Distance(p.transform.position, Player.transform.position)).First().roomId;
+            var nearest = Checkpoints.OrderBy(p => Vector2.Distance(p.transform.position, Player.transform.position)).FirstOrDefault();
+            int challenge = nearest == null ? 0 : nearest.roomId;
             ShowNotice("你倒下了，正在返回检查点……");
             yield return new WaitForSeconds(.7f);
             foreach (var projectile in FindObjectsOfType<Projectile>()) Destroy(projectile.gameObject);
-            int target = checkpointRoom >= 0 ? checkpointRoom : 0;
+            foreach (var orb in FindObjectsOfType<SkillOrb>()) Destroy(orb.gameObject);
+            var initial = Checkpoints.FirstOrDefault(p => p.isInitialSpawn);
+            int target = checkpointRoom >= 0 ? checkpointRoom : initial == null ? challenge : initial.roomId;
             foreach (var enemy in Enemies)
                 if (enemy.roomId == challenge || enemy.roomId == target)
                 {
@@ -393,9 +495,10 @@ namespace HollowDemo
         public bool PickupCollected(string id) => collectedPickups.Contains(id);
         public bool LandmarkDiscovered(string id) => discoveredLandmarks.Contains(id);
         public bool EnemyDefeated(string id) => defeatedEnemies.Contains(id);
-        public void RecordEnemyDeath(string id)
+        public void RecordEnemyDeath(string id, int crystalReward = 0)
         {
             if (!defeatedEnemies.Add(id)) return;
+            Crystals += crystalReward;
             foreach (var arena in BossArenas)
                 if (arena.boss.persistentId == id) arena.Victory();
             SaveProgress();
@@ -433,10 +536,11 @@ namespace HollowDemo
                 Transitioning = false;
                 Fade = 0;
                 SetScreen(GameScreen.MainMenu);
-                ShowNotice("出生点没有安全地面，请调整整体地图下的起点或检查点重生点。");
-                Debug.LogWarning("Spawn blocked: " + spawn.name + " at " + spawn.position);
+                ShowNotice("出生点没有安全地面，请调整检查点的重生点位置。");
+                Debug.LogWarning("Spawn blocked: " + (spawn == null ? "未配置重生点" : spawn.name + " at " + spawn.position));
                 yield break;
             }
+            if (!resetActors) { FlaskCharges = BloodFlaskCapacity; ManaFlaskCharges = ManaFlaskCapacity; }
             Player.Respawn(position);
             Physics2D.SyncTransforms();
             FindObjectOfType<CameraFollow>().Snap();

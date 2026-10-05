@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -77,7 +77,7 @@ namespace HollowDemo
             for (int i = 0; i < inventoryLabels.Length; i++)
             {
                 var slot = game.inventory.slots[i];
-                inventoryLabels[i].text = slot == null ? "空" : slot.item.displayName + "\n×" + slot.count;
+                inventoryLabels[i].text = slot == null ? "空" : slot.item.displayName + "\n" + (slot.item.kind == ItemKind.RefillableFlask ? game.FlaskCharges + " / " + game.BloodFlaskCapacity : slot.item.kind == ItemKind.ManaFlask ? game.ManaFlaskCharges + " / " + game.ManaFlaskCapacity : "×" + slot.count);
                 var colors = inventoryButtons[i].colors;
                 colors.normalColor = i == selectedSlot ? inventorySelection : Color.white;
                 inventoryButtons[i].colors = colors;
@@ -85,13 +85,13 @@ namespace HollowDemo
             var selected = game.inventory.slots[selectedSlot];
             itemTitle.text = selected == null ? "选择物品" : selected.item.displayName;
             itemDescription.text = selected == null ? "" : selected.item.description + "\n每格上限：" + selected.item.stackLimit;
-            useItem.interactable = equipItem.interactable = selected != null && selected.item.healing > 0;
+            useItem.interactable = equipItem.interactable = selected != null && (selected.item.healing > 0 || selected.item.kind == ItemKind.ManaFlask);
         }
         void RefreshShop()
         {
             var shop = game.SpeakingNpc.shop;
             shopTitle.text = shop.displayName;
-            currency.text = "持有" + shop.currency.displayName + "：" + game.inventory.Count(shop.currency);
+            currency.text = "持有" + shop.currency.displayName + "：" + game.ItemCount(shop.currency);
             if (shownShop == shop) return;
             shownShop = shop;
             foreach (Transform child in shopContent)
@@ -126,7 +126,7 @@ namespace HollowDemo
                 if (!show) continue;
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(enemyLayer, screen, GetComponent<Canvas>().worldCamera, out var point);
                 pair.Value.rectTransform.anchoredPosition = point;
-                pair.Value.text = ChineseFont.EnemyNames[(int)enemy.kind] + " " + enemy.Health;
+                pair.Value.text ="";
             }
         }
         public void Resume() => game.SetScreen(GameScreen.None);
@@ -144,6 +144,9 @@ namespace HollowDemo
         }
         public void UseSelected()
         {
+            var selected = game.inventory.slots[selectedSlot];
+            if (selected != null && selected.item.kind == ItemKind.ManaFlask) { game.UseManaFlask(); return; }
+            if (selected != null && selected.item.kind == ItemKind.RefillableFlask) { game.UseFlask(); return; }
             bool used = game.inventory.Use(selectedSlot, game.Player);
             game.ShowNotice(used ? "生命已恢复" : "生命已满，未消耗物品");
             if (used)

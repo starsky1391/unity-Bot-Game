@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1723a15a9b0fc7469d1a867ac97ecb7, type: 3}
+  m_Name: mana_flask
+  m_EditorClassIdentifier: 
+  kind: 5
+  id: mana_flask
+  displayName: "\u84DD\u74F6"
+  description: "\u68C0\u67E5\u70B9\u5206\u914D\u7684\u5FAA\u73AF\u84DD\u74F6\uFF0C\u6062\u590D\u84DD\u91CF"
+  stackLimit: 1
+  healing: 0
+  manaRecovery: 50
+  color: {r: 0.25, g: 0.5, b: 1, a: 1}
+  icon: {fileID: 0}
+  retainWhenEmpty: 1

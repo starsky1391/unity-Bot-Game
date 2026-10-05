@@ -172,6 +172,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 092dff3dd937efb44ab7312e93973b77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableDoubleJump: 1
+  enableWallClimb: 1
+  enableDash: 1
+  enableGrapple: 1
   moveSpeed: 7
   jumpSpeed: 11
   secondJumpSpeed: 10.5
@@ -192,6 +196,12 @@ MonoBehaviour:
   grappleRange: 11
   grappleSpeed: 14
   grappleDuration: 1.1
+  maxMana: 100
+  skillManaCost: 20
+  skillDamage: 2
+  skillSpeed: 14
+  skillCooldown: 0.3
+  skillPrefab: {fileID: 4869094604089148116, guid: 6c02b82236f17604c9edf9e3f03d69aa, type: 3}
 --- !u!1 &8038757267428671686
 GameObject:
   m_ObjectHideFlags: 0
