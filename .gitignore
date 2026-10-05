@@ -3,7 +3,8 @@
 /Obj/
 /Logs/
 /UserSettings/
-/Builds/
+/Builds/*
+!/Builds/Windows/
 *.csproj
 *.sln
 /unity-*.log
