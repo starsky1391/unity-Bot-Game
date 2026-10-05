@@ -12,7 +12,7 @@ namespace HollowDemo
         public override void Interact(DemoGame game)
         {
             if (game.PickupCollected(persistentId)) return;
-            if (!game.inventory.TryAdd(item, count)) { game.ShowNotice("背包空间不足，物品保留在原地"); return; }
+            if (!game.TryCollectItem(item, count)) { game.ShowNotice("背包空间不足，物品保留在原地"); return; }
             game.ShowNotice("获得 " + DisplayName + " ×" + count);
             gameObject.SetActive(false);
             game.RecordPickup(persistentId);

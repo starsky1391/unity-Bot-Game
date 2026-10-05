@@ -13,6 +13,9 @@ namespace HollowDemo
         public float moveSpeed = 2, detectionRange = 8, warningTime = .7f, attackTime = .4f, recoveryTime = 1.1f;
         public Color baseColor = Color.red;
         public string persistentId;
+        public CrystalDropSettings crystalDrops;
+        public bool overrideCrystalDrop;
+        [Min(0)] public int crystalDropAmount = 3;
         public AttackPhase Phase { get; private set; }
         public int Health { get; private set; }
         Vector2 homeLocal;
@@ -231,7 +234,7 @@ namespace HollowDemo
             Health -= damage;
             if (Health <= 0)
             {
-                DemoGame.Instance.RecordEnemyDeath(persistentId);
+                DemoGame.Instance.RecordEnemyDeath(persistentId, overrideCrystalDrop || crystalDrops == null ? crystalDropAmount : crystalDrops.amount);
                 gameObject.SetActive(false);
                 return true;
             }

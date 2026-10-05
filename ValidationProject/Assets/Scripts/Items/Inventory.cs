@@ -81,7 +81,7 @@ namespace HollowDemo
         public bool Use(int index, PlayerMotor player)
         {
             var slot = slots[index];
-            if (slot == null || slot.item.healing <= 0 || player.Health >= player.maxHealth) return false;
+            if (slot == null || (slot.item.kind == ItemKind.RefillableFlask || slot.item.kind == ItemKind.ManaFlask) || slot.item.healing <= 0 || player.Health >= player.maxHealth) return false;
             player.Heal(slot.item.healing);
             if (--slot.count == 0) slots[index] = null;
             return true;

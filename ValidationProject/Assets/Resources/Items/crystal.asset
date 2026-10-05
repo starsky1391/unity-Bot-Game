@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1723a15a9b0fc7469d1a867ac97ecb7, type: 3}
   m_Name: crystal
   m_EditorClassIdentifier: 
+  kind: 4
   id: crystal
   displayName: "\u6D1E\u7A74\u6676\u77F3"
   description: "\u6D1E\u7A74\u4E2D\u91C7\u96C6\u7684\u666E\u901A\u6750\u6599\uFF0C\u4E5F\u53EF\u7528\u4E8E\u4E0E\u5546\u4EBA\u4EA4\u6613\u3002"
   stackLimit: 99
   healing: 0
   color: {r: 0.8, g: 0.55, b: 1, a: 1}
+  icon: {fileID: 0}
+  retainWhenEmpty: 0

@@ -1,17 +1,20 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp:
+    - HollowDemo.CrystalDropSettings
     - HollowDemo.ItemDefinition
     Assembly-CSharp.dll:
     - HollowDemo.BossArena
     - HollowDemo.BossCanvas
     - HollowDemo.CameraFollow
     - HollowDemo.Checkpoint
+    - HollowDemo.CrystalDropSettings
     - HollowDemo.DemoGame
     - HollowDemo.DemoUI
     - HollowDemo.DialogueCanvas
     - HollowDemo.DialogueDefinition
     - HollowDemo.EnemyBrain
+    - HollowDemo.FlaskAllocationCanvas
     - HollowDemo.GrapplePoint
     - HollowDemo.GroundSurface
     - HollowDemo.ItemDefinition
@@ -23,6 +26,7 @@ ScriptsOnlyBuild:
     - HollowDemo.PlayerMotor
     - HollowDemo.ShopDefinition
     - HollowDemo.ShopOfferView
+    - HollowDemo.SkillOrb
     - HollowDemo.WorldLabel
     - HollowDemo.WorldMap
     UnityEngine.UI.dll:
@@ -163,69 +167,75 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1588}
     - Class: 114
-      Script: {instanceID: 1628}
+      Script: {instanceID: 1630}
     - Class: 114
-      Script: {instanceID: 1658}
+      Script: {instanceID: 1662}
     - Class: 114
-      Script: {instanceID: 1676}
+      Script: {instanceID: 1680}
     - Class: 114
-      Script: {instanceID: 1700}
+      Script: {instanceID: 1702}
     - Class: 114
-      Script: {instanceID: 1704}
+      Script: {instanceID: 1708}
     - Class: 114
-      Script: {instanceID: 1720}
+      Script: {instanceID: 1712}
     - Class: 114
-      Script: {instanceID: 1724}
+      Script: {instanceID: 1728}
     - Class: 114
-      Script: {instanceID: 1738}
+      Script: {instanceID: 1732}
     - Class: 114
       Script: {instanceID: 1744}
     - Class: 114
-      Script: {instanceID: 1752}
+      Script: {instanceID: 1748}
+    - Class: 114
+      Script: {instanceID: 1754}
     - Class: 114
       Script: {instanceID: 1762}
     - Class: 114
-      Script: {instanceID: 1770}
-    - Class: 114
       Script: {instanceID: 1772}
     - Class: 114
-      Script: {instanceID: 1778}
+      Script: {instanceID: 1780}
     - Class: 114
-      Script: {instanceID: 1790}
+      Script: {instanceID: 1782}
+    - Class: 114
+      Script: {instanceID: 1788}
     - Class: 114
       Script: {instanceID: 1802}
     - Class: 114
-      Script: {instanceID: 1816}
+      Script: {instanceID: 1814}
     - Class: 114
-      Script: {instanceID: 1822}
+      Script: {instanceID: 1828}
     - Class: 114
-      Script: {instanceID: 1880}
+      Script: {instanceID: 1834}
     - Class: 114
-      Script: {instanceID: 1882}
+      Script: {instanceID: 1896}
     - Class: 114
-      Script: {instanceID: 1892}
+      Script: {instanceID: 1898}
     - Class: 114
-      Script: {instanceID: 1906}
+      Script: {instanceID: 1910}
     - Class: 114
-      Script: {instanceID: 1952}
+      Script: {instanceID: 1924}
     - Class: 114
-      Script: {instanceID: 1954}
+      Script: {instanceID: 1970}
     - Class: 114
-      Script: {instanceID: 1978}
+      Script: {instanceID: 1972}
     - Class: 114
-      Script: {instanceID: 1988}
+      Script: {instanceID: 1986}
     - Class: 114
       Script: {instanceID: 1998}
     - Class: 114
-      Script: {instanceID: 2006}
+      Script: {instanceID: 2010}
     - Class: 114
-      Script: {instanceID: 2012}
+      Script: {instanceID: 2020}
     - Class: 114
-      Script: {instanceID: 2026}
+      Script: {instanceID: 2028}
     - Class: 114
-      Script: {instanceID: 2040}
+      Script: {instanceID: 2034}
     - Class: 114
-      Script: {instanceID: 2042}
+      Script: {instanceID: 2048}
+    - Class: 114
+      Script: {instanceID: 2064}
+    - Class: 114
+      Script: {instanceID: 2066}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -297,7 +307,7 @@ ScriptsOnlyBuild:
     className: EventTrigger
   - hash:
       serializedVersion: 2
-      Hash: f58ff96b10f6094241d8df33c312a6ae
+      Hash: decadb12808b35afaeddfbe3b8105431
     assemblyName: Assembly-CSharp
     namespaceName: HollowDemo
     className: ItemDefinition
@@ -307,6 +317,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
     className: ContentSizeFitter
+  - hash:
+      serializedVersion: 2
+      Hash: 46976b2ed610c1cd94bbae76ea0ae655
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: DamageWater
   - hash:
       serializedVersion: 2
       Hash: fc138d15892459d3352a5b469bc7f3f7
@@ -319,6 +335,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
     className: RectMask2D
+  - hash:
+      serializedVersion: 2
+      Hash: 707444b139f5ce1bd7fcb1d837dbca83
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: GrappleAimSmokeProbe
   - hash:
       serializedVersion: 2
       Hash: 5ebc58ec194dd44630b25fcc270ad4af
@@ -339,7 +361,7 @@ ScriptsOnlyBuild:
     className: RoomExit
   - hash:
       serializedVersion: 2
-      Hash: cb09ce93205129311bf75201c844fa80
+      Hash: ed8aefc260663476a2b97e3f1bebe216
     assemblyName: Assembly-CSharp
     namespaceName: HollowDemo
     className: EnemyBrain
@@ -349,6 +371,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp
     namespaceName: HollowDemo
     className: RoomContent
+  - hash:
+      serializedVersion: 2
+      Hash: f61f065995e1d8f04308a4f096a198f4
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: FlaskAllocationCanvas
   - hash:
       serializedVersion: 2
       Hash: 57019237cf25b0ba86b47c86df4bbde0
@@ -369,7 +397,7 @@ ScriptsOnlyBuild:
     className: RoomMapDefinition
   - hash:
       serializedVersion: 2
-      Hash: aa776af4e41186e8931d7e68f0742505
+      Hash: a695014842f3cbb123d49048700c0b41
     assemblyName: Assembly-CSharp
     namespaceName: HollowDemo
     className: DemoGame
@@ -379,6 +407,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
     className: LayoutElement
+  - hash:
+      serializedVersion: 2
+      Hash: 71add7cf55b4b7ac6d52e19fe18fa8bc
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: CrystalDropSettings
   - hash:
       serializedVersion: 2
       Hash: f64ca651737321a809bee464e40a454b
@@ -423,7 +457,7 @@ ScriptsOnlyBuild:
     className: StandaloneInputModule
   - hash:
       serializedVersion: 2
-      Hash: 72703c9d29ee6387c7bdd6855785bf17
+      Hash: f2d2f8dc2bf20f27be86abad07ce5dfe
     assemblyName: Assembly-CSharp
     namespaceName: HollowDemo
     className: Checkpoint
@@ -433,6 +467,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
     className: VerticalLayoutGroup
+  - hash:
+      serializedVersion: 2
+      Hash: 757ea0c7bb9d1e4d83efc3e2b18bfef3
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: GrappleJumpSmokeProbe
   - hash:
       serializedVersion: 2
       Hash: a90f6a00b23520788be7d89ee3b0773d
@@ -465,7 +505,7 @@ ScriptsOnlyBuild:
     className: GroundSurface
   - hash:
       serializedVersion: 2
-      Hash: e9426ff89bb406da4e6eb80187684475
+      Hash: 5e9b87d9e995f670e3cda5bbe4d58fe8
     assemblyName: Assembly-CSharp
     namespaceName: HollowDemo
     className: GrapplePoint
@@ -481,6 +521,18 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.EventSystems
     className: BaseInput
+  - hash:
+      serializedVersion: 2
+      Hash: f03a1e77c3dc7637c707f431292c8d97
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: InstantDeathZone
+  - hash:
+      serializedVersion: 2
+      Hash: 22365c170529176810beadb1fd849649
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: DropPlatform
   - hash:
       serializedVersion: 2
       Hash: a1ac4c50e55874de16eee3db71aa9784
@@ -507,10 +559,16 @@ ScriptsOnlyBuild:
     className: Button
   - hash:
       serializedVersion: 2
-      Hash: 8f755c01dcdc8e2affa26db802f2dd10
+      Hash: b3db333b0418591009821c4b025b4508
     assemblyName: Assembly-CSharp
     namespaceName: HollowDemo
     className: PlayerHudCanvas
+  - hash:
+      serializedVersion: 2
+      Hash: 4389c0062bd1171eb936fede0652a5ad
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: ProgressionSmokeProbe
   - hash:
       serializedVersion: 2
       Hash: ebdbfb3906dc6731ef9098f8eca8b333
@@ -561,6 +619,12 @@ ScriptsOnlyBuild:
     className: ShopOfferView
   - hash:
       serializedVersion: 2
+      Hash: 979e17830a3c79833f23fd017d1e744a
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: SkillOrb
+  - hash:
+      serializedVersion: 2
       Hash: afb7b65d28d5a7423e69a1b076be0064
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
@@ -571,6 +635,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp
     namespaceName: HollowDemo
     className: Pickup
+  - hash:
+      serializedVersion: 2
+      Hash: 57523538bb4bfee1562256bfb990c081
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: SkillSmokeProbe
   - hash:
       serializedVersion: 2
       Hash: 79cb6da72deae0976ff1fd5e14c5e1e7
@@ -615,7 +685,7 @@ ScriptsOnlyBuild:
     className: DemoUI
   - hash:
       serializedVersion: 2
-      Hash: e096d9f9336ca043874acaf63c2361aa
+      Hash: 16698dcf6b347f54d122110823246ebd
     assemblyName: Assembly-CSharp
     namespaceName: HollowDemo
     className: PlayerMotor

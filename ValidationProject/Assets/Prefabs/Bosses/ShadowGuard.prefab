@@ -267,6 +267,9 @@ MonoBehaviour:
   recoveryTime: 1.2
   baseColor: {r: 0.45, g: 0.32, b: 0.7, a: 1}
   persistentId: boss_shadow_guard
+  crystalDrops: {fileID: 11400000, guid: e9bee2ae0d13cc64fae0d727e2bc8f86, type: 2}
+  overrideCrystalDrop: 0
+  crystalDropAmount: 3
 --- !u!1 &5094270685885532704
 GameObject:
   m_ObjectHideFlags: 0

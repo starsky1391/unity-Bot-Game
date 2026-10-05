@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -12,7 +12,9 @@ namespace HollowDemo
         public MapCell[] exploredMapCells;
         public string[] equippedItems;
         public int selectedEquipment;
-        public int version = 2;
+        public int version = 4;
+        public int flaskCapacity, flaskCharges, crystals;
+        public int manaFlaskCapacity, manaFlaskCharges;
         public int checkpointRoom = -1;
         public string checkpointId;
         public string[] activatedCheckpointIds = Array.Empty<string>();

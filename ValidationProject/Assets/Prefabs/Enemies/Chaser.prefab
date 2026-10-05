@@ -351,3 +351,6 @@ MonoBehaviour:
   recoveryTime: 1.1
   baseColor: {r: 0.9, g: 0.6340909, b: 0.31500003, a: 1}
   persistentId: 
+  crystalDrops: {fileID: 11400000, guid: e9bee2ae0d13cc64fae0d727e2bc8f86, type: 2}
+  overrideCrystalDrop: 0
+  crystalDropAmount: 3
