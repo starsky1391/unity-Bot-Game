@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7294585368686973454}
   - component: {fileID: 1474901714753456296}
+  - component: {fileID: 9900000000000000095}
   m_Layer: 0
   m_Name: Shield
   m_TagString: Untagged
@@ -246,7 +247,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 1b8106961a9d128489435b31d8dcb1bf, type: 3}
+  m_Sprite: {fileID: 1354828927, guid: 62a7bda520584d841840def7f07031d6, type: 3}
   m_Color: {r: 0.52772737, g: 0.31500003, b: 0.9, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -354,3 +355,24 @@ MonoBehaviour:
   crystalDrops: {fileID: 11400000, guid: e9bee2ae0d13cc64fae0d727e2bc8f86, type: 2}
   overrideCrystalDrop: 0
   crystalDropAmount: 3
+--- !u!95 &9900000000000000095
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 81119525576874639}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bb07952a37f78e847838a228ff6c5c72, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

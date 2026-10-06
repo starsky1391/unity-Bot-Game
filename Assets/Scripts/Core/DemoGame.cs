@@ -516,9 +516,9 @@ namespace HollowDemo
         public bool PickupCollected(string id) => collectedPickups.Contains(id);
         public bool LandmarkDiscovered(string id) => discoveredLandmarks.Contains(id);
         public bool EnemyDefeated(string id) => defeatedEnemies.Contains(id);
-        public void RecordEnemyDeath(string id, int crystalReward = 0, bool persist = true)
+        public void RecordEnemyDeath(string id, int crystalReward = 0)
         {
-            if (persist && !defeatedEnemies.Add(id)) return;
+            if (!defeatedEnemies.Add(id)) return;
             Crystals += crystalReward;
             foreach (var arena in BossArenas)
                 if (arena.boss.persistentId == id) arena.Victory();

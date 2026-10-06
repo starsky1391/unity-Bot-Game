@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5334620256711403507}
   - component: {fileID: 5088417827070834758}
   - component: {fileID: 5932909152670799286}
+  - component: {fileID: 3380586377162513677}
   m_Layer: 10
   m_Name: Shooter
   m_TagString: Untagged
@@ -78,8 +79,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: b410dce9e8267384ea74eb4ccb15d5b4, type: 3}
-  m_Color: {r: 0.31500003, g: 0.9, b: 0.42136368, a: 1}
+  m_Sprite: {fileID: 168791396, guid: dfb6144d75d890545958aabfcd2497bd, type: 3}
+  m_Color: {r: 0.952302, g: 0.15435463, b: 0.10701723, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -125,7 +126,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1.2257826, y: 1.0833333}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -183,9 +184,31 @@ MonoBehaviour:
   recoveryTime: 1.1
   baseColor: {r: 0.31500003, g: 0.9, b: 0.42136368, a: 1}
   persistentId: 
+  runtimeSummon: 0
   crystalDrops: {fileID: 11400000, guid: e9bee2ae0d13cc64fae0d727e2bc8f86, type: 2}
   overrideCrystalDrop: 0
   crystalDropAmount: 3
+--- !u!95 &3380586377162513677
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3972395612734687884}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 92cd61e1b3e59f0448993fe02f331e2f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7306196149922312530
 GameObject:
   m_ObjectHideFlags: 0

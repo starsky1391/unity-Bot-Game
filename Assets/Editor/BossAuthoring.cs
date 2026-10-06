@@ -4,71 +4,11 @@ using System.Linq;
 using HollowDemo;
 using UnityEditor;
 using UnityEditor.SceneManagement;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 public static class BossAuthoring
 {
     const string ArenaPath="Assets/Prefabs/Bosses/BossArena.prefab",UiPath="Assets/Prefabs/UI/BossInterface.prefab";
-    [MenuItem("洞穴 Demo/添加 Boss 两状态动画器")]
-    public static void AddWaveAnimator()
-    {
-        const string folder="Assets/Animations/Boss";
-        Directory.CreateDirectory(folder);AssetDatabase.Refresh();
-        var idle=AssetDatabase.LoadAssetAtPath<AnimationClip>(folder+"/BossIdle.anim");
-        if(idle==null){idle=new AnimationClip{name="待机"};AssetDatabase.CreateAsset(idle,folder+"/BossIdle.anim");}
-        var exposed=AssetDatabase.LoadAssetAtPath<AnimationClip>(folder+"/BossCoreExposed.anim");
-        if(exposed==null){exposed=new AnimationClip{name="核心暴露"};AssetDatabase.CreateAsset(exposed,folder+"/BossCoreExposed.anim");}
-        var controller=AssetDatabase.LoadAssetAtPath<AnimatorController>(folder+"/WaveBoss.controller");
-        if(controller==null)
-        {
-            controller=AnimatorController.CreateAnimatorControllerAtPath(folder+"/WaveBoss.controller");
-            controller.AddParameter("CoreExposed",AnimatorControllerParameterType.Bool);
-            var machine=controller.layers[0].stateMachine;
-            var idleState=machine.AddState("待机");idleState.motion=idle;
-            var exposedState=machine.AddState("核心暴露");exposedState.motion=exposed;
-            machine.defaultState=idleState;
-            var open=idleState.AddTransition(exposedState);open.hasExitTime=false;open.duration=0;open.AddCondition(AnimatorConditionMode.If,0,"CoreExposed");
-            var close=exposedState.AddTransition(idleState);close.hasExitTime=false;close.duration=0;close.AddCondition(AnimatorConditionMode.IfNot,0,"CoreExposed");
-        }
-        const string path="Assets/Prefabs/Bosses/WaveBossArena.prefab";
-        var root=PrefabUtility.LoadPrefabContents(path);
-        var waves=root.GetComponent<WaveBoss>();var core=root.GetComponent<BossArena>().boss;
-        var animator=core.GetComponent<Animator>();if(animator==null)animator=core.gameObject.AddComponent<Animator>();
-        animator.runtimeAnimatorController=controller;animator.applyRootMotion=false;
-        waves.bossAnimator=animator;
-        PrefabUtility.SaveAsPrefabAsset(root,path);PrefabUtility.UnloadPrefabContents(root);AssetDatabase.SaveAssets();
-        Debug.Log("DEMO_WAVE_ANIMATOR_OK");
-    }
-    [MenuItem("洞穴 Demo/生成三波召唤 Boss 预制体")]
-    public static void CreateWaveBoss()
-    {
-        var root=new GameObject("三波召唤 Boss");
-        var zone=root.AddComponent<BoxCollider2D>();zone.isTrigger=true;zone.size=new Vector2(24,10);zone.offset=new Vector2(0,4);
-        var arena=root.AddComponent<BossArena>();arena.bossName="召唤核心";
-        var waves=root.AddComponent<WaveBoss>();
-        waves.patrolPrefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Enemies/Patrol.prefab").GetComponent<EnemyBrain>();
-        waves.shooterPrefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Enemies/Shooter.prefab").GetComponent<EnemyBrain>();
-        waves.pursuerPrefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Enemies/Pursuer.prefab").GetComponent<EnemyBrain>();
-        var core=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Bosses/ShadowGuard.prefab"),root.transform);
-        core.name="可攻击核心";core.transform.localPosition=new Vector3(0,3);core.transform.localScale=Vector3.one*1.4f;
-        arena.boss=core.GetComponent<EnemyBrain>();arena.boss.kind=EnemyKind.Patrol;arena.boss.maxHealth=24;arena.boss.persistentId="wave_boss";
-        core.GetComponent<Rigidbody2D>().bodyType=RigidbodyType2D.Kinematic;core.GetComponent<Rigidbody2D>().gravityScale=0;
-        core.GetComponent<Collider2D>().isTrigger=true;
-        core.GetComponent<SpriteRenderer>().color=arena.boss.baseColor=new Color(.65f,.3f,1);
-        arena.spawnPoint=core.transform;
-        Ground(root.transform,"地面",new Vector2(0,-.5f),new Vector2(25,1));
-        arena.leftBarrier=Ground(root.transform,"左侧空气墙",new Vector2(-12,4),new Vector2(.5f,8));
-        arena.rightBarrier=Ground(root.transform,"右侧空气墙",new Vector2(12,4),new Vector2(.5f,8));
-        foreach(var wall in new[]{arena.leftBarrier,arena.rightBarrier}){wall.GetComponent<GroundSurface>().canClimb=false;wall.GetComponent<SpriteRenderer>().color=new Color(.6f,.4f,1,.2f);wall.SetActive(false);}
-        waves.groundSpawns=new Transform[3];waves.flyingSpawns=new Transform[2];
-        for(int n=0;n<5;n++){var point=new GameObject(n<3?"地面召唤点 "+(n+1):"飞行召唤点 "+(n-2)).transform;point.SetParent(root.transform,false);point.localPosition=n<3?new Vector3(-7+n*7,1.1f):new Vector3(n==3?-5:5,6);if(n<3)waves.groundSpawns[n]=point;else waves.flyingSpawns[n-3]=point;}
-        foreach(string name in new[]{"下坠砖块","落点预警"}){var go=new GameObject(name);go.transform.SetParent(root.transform,false);var sprite=go.AddComponent<SpriteRenderer>();sprite.sprite=AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Resources/Sprites/Square.png");sprite.sortingOrder=5;sprite.color=name=="下坠砖块"?new Color(.75f,.7f,.65f):new Color(1,.15f,.1f,.85f);sprite.enabled=false;if(name=="下坠砖块")waves.brick=sprite;else waves.warning=sprite;}
-        PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(UiPath),root.transform);
-        PrefabUtility.SaveAsPrefabAsset(root,"Assets/Prefabs/Bosses/WaveBossArena.prefab");Object.DestroyImmediate(root);AssetDatabase.SaveAssets();
-        AddWaveAnimator();
-        Debug.Log("DEMO_WAVE_BOSS_PREFAB_OK");
-    }
     [MenuItem("洞穴 Demo/添加 Boss 展示区")]
     public static void Configure()
     {

@@ -21,9 +21,6 @@ namespace HollowDemo
             var game=DemoGame.Instance;
             var arena=game.ActiveBoss;
             canvas.enabled=arena!=null && game.HasRun && !game.Player.Dead && !game.Transitioning && game.Screen==GameScreen.None;
-            var owner=GetComponentInParent<BossArena>();
-            if(owner!=null && arena!=owner) canvas.enabled=false;
-            if(owner==null && arena!=null && arena.GetComponentInChildren<BossCanvas>(true)!=null) canvas.enabled=false;
             if(!canvas.enabled) return;
             bool victory=arena.State==BossEncounterState.Defeated;
             bool intro=arena.State==BossEncounterState.Introduction || victory;

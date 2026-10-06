@@ -13,7 +13,7 @@ namespace HollowDemo
         public float moveSpeed = 2, detectionRange = 8, warningTime = .7f, attackTime = .4f, recoveryTime = 1.1f;
         public Color baseColor = Color.red;
         public string persistentId;
-        [HideInInspector] public bool runtimeSummon;
+        public bool runtimeSummon;
         public CrystalDropSettings crystalDrops;
         public bool overrideCrystalDrop;
         [Min(0)] public int crystalDropAmount = 3;
@@ -79,7 +79,7 @@ namespace HollowDemo
             if (body.position.y < DemoGame.Instance.World.FallY)
             {
                 Health = 0;
-                DemoGame.Instance.RecordEnemyDeath(persistentId, 0, !runtimeSummon);
+                DemoGame.Instance.RecordEnemyDeath(persistentId);
                 gameObject.SetActive(false);
                 return;
             }
@@ -242,14 +242,14 @@ namespace HollowDemo
             if (isCore && !waveBoss.CanHitCore) return false;
             if (kind == EnemyKind.Shield && Mathf.Sign(source.x - body.position.x) == facing)
             {
-                DemoGame.Instance.ShowNotice("盾牌挡住了攻击，尝试绕到背后");
+                DemoGame.Instance.ShowNotice("���Ƶ�ס�˹����������Ƶ�����");
                 return false;
             }
             Health -= damage;
             if (isCore) waveBoss.CoreStruck();
             if (Health <= 0)
             {
-                DemoGame.Instance.RecordEnemyDeath(persistentId, overrideCrystalDrop || crystalDrops == null ? crystalDropAmount : crystalDrops.amount, !runtimeSummon);
+                DemoGame.Instance.RecordEnemyDeath(persistentId, overrideCrystalDrop || crystalDrops == null ? crystalDropAmount : crystalDrops.amount);
                 gameObject.SetActive(false);
                 return true;
             }

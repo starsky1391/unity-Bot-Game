@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3146642692065418409}
   - component: {fileID: 1705360977794807730}
+  - component: {fileID: 9900000000000000095}
   m_Layer: 0
   m_Name: Warning
   m_TagString: Untagged
@@ -181,6 +182,7 @@ GameObject:
   - component: {fileID: 1530069592550930677}
   - component: {fileID: 4721581830688210575}
   - component: {fileID: 9105016594025517876}
+  - component: {fileID: -3982213591735266596}
   m_Layer: 10
   m_Name: Patrol
   m_TagString: Untagged
@@ -246,7 +248,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: b410dce9e8267384ea74eb4ccb15d5b4, type: 3}
+  m_Sprite: {fileID: -481560159, guid: 10e3e7e0943e4af4297d73bec27fac53, type: 3}
   m_Color: {r: 0.9, g: 0.31500003, b: 0.31500003, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -293,7 +295,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1.3363637, y: 1.1823685}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -351,6 +353,49 @@ MonoBehaviour:
   recoveryTime: 1.1
   baseColor: {r: 0.9, g: 0.31500003, b: 0.31500003, a: 1}
   persistentId: 
+  runtimeSummon: 0
   crystalDrops: {fileID: 11400000, guid: e9bee2ae0d13cc64fae0d727e2bc8f86, type: 2}
   overrideCrystalDrop: 0
   crystalDropAmount: 3
+--- !u!95 &-3982213591735266596
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7856857668847892778}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1c8f32e1aefb9ca438c387baa7d4387d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!95 &9900000000000000095
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7094391709428101867}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1c8f32e1aefb9ca438c387baa7d4387d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

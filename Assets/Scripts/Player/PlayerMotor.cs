@@ -32,6 +32,7 @@ namespace HollowDemo
         public bool Dead => Health <= 0;
         public bool CanDoubleJump => enableDoubleJump && !usedDouble;
         public bool CanAirDash => enableDash && !usedAirDash;
+        Animator animator;
         Rigidbody2D body;
         BoxCollider2D box;
         SpriteRenderer visual, slash;
@@ -47,6 +48,7 @@ namespace HollowDemo
 
         void Awake()
         {
+            animator = GetComponent<Animator>();
             body = GetComponent<Rigidbody2D>();
             box = GetComponent<BoxCollider2D>();
             visual = GetComponent<SpriteRenderer>();
@@ -109,11 +111,23 @@ namespace HollowDemo
                 ? new Color(.6f, .95f, 1, .35f) : new Color(.6f, .95f, 1);
         }
 
+        void LateUpdate()
+        {
+            if (DemoGame.Instance.Paused || Dead) return;
+            animator.SetFloat("Speed", Mathf.Abs(body.velocity.x));
+            animator.SetFloat("VelocityY", body.velocity.y);
+            animator.SetBool("IsGrounded", Grounded);
+            animator.SetBool("IsDashing", Time.time < dashUntil);
+            animator.SetBool("IsAttacking", Time.time < attackUntil);
+            visual.flipX = Facing < 0;
+        }
+
         void FixedUpdate()
         {
             if (Dead || DemoGame.Instance.Paused) return;
             Vector2 p = body.position;
-            var ground = Physics2D.BoxCast(p, new Vector2(.65f, .12f), 0, Vector2.down, .72f, Terrain).collider;
+            var feet = box.bounds;
+            var ground = Physics2D.BoxCast(new Vector2(feet.center.x, feet.min.y + .06f), new Vector2(feet.size.x * .8f, .1f), 0, Vector2.down, .16f, Terrain).collider;
             Grounded = body.velocity.y <= .1f && ground != null && !Physics2D.GetIgnoreCollision(box, ground) &&
                 (ground.GetComponent<DropPlatform>() == null || box.bounds.min.y >= ground.bounds.max.y - .12f);
             var rightWall = Physics2D.BoxCast(p, new Vector2(.12f, .85f), 0, Vector2.right, .48f, Terrain).collider;
@@ -227,6 +241,7 @@ namespace HollowDemo
         public bool TryCast(Vector2 direction)
         {
             if (DemoGame.Instance.Paused || Dead || Time.time < hurtUntil || Time.time < dashUntil || Time.time < attackUntil || Grappling || Time.time < skillReady || Mana < skillManaCost) return false;
+            if (skillPrefab == null) { DemoGame.Instance.ShowNotice("未配置技能预制体：请设置 Player 的 Skill Prefab"); return false; }
             if (direction.sqrMagnitude == 0) direction = Vector2.right * Facing;
             direction.Normalize();
             var orb = Instantiate(skillPrefab, transform.position, Quaternion.identity);
@@ -236,7 +251,8 @@ namespace HollowDemo
         }
         public bool TryDropThrough()
         {
-            var floor = Physics2D.BoxCast(body.position, new Vector2(.65f, .12f), 0, Vector2.down, .8f, Terrain).collider;
+            var bounds = box.bounds;
+            var floor = Physics2D.BoxCast(new Vector2(bounds.center.x, bounds.min.y + .06f), new Vector2(bounds.size.x * .8f, .1f), 0, Vector2.down, .2f, Terrain).collider;
             var platform = floor == null ? null : floor.GetComponent<DropPlatform>();
             if (platform == null) return false;
             platform.Drop(box); Grounded = false; jumpUntil = coyoteUntil = -1;

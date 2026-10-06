@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 5000364784647952581}
   - component: {fileID: 7673943505478525195}
   - component: {fileID: 6745228301635100769}
+  - component: {fileID: -6374836426945848939}
   m_Layer: 10
   m_Name: Diver
   m_TagString: Untagged
@@ -162,8 +163,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 1b8106961a9d128489435b31d8dcb1bf, type: 3}
-  m_Color: {r: 0.8468182, g: 0.31500003, b: 0.9, a: 1}
+  m_Sprite: {fileID: 1354828927, guid: 62a7bda520584d841840def7f07031d6, type: 3}
+  m_Color: {r: 0.9566206, g: 0.92819, b: 0.9595472, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -209,7 +210,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 0.920354, y: 0.8125}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -267,9 +268,31 @@ MonoBehaviour:
   recoveryTime: 1.1
   baseColor: {r: 0.8468182, g: 0.31500003, b: 0.9, a: 1}
   persistentId: 
+  runtimeSummon: 0
   crystalDrops: {fileID: 11400000, guid: e9bee2ae0d13cc64fae0d727e2bc8f86, type: 2}
   overrideCrystalDrop: 0
   crystalDropAmount: 3
+--- !u!95 &-6374836426945848939
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3164155028726261866}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bb07952a37f78e847838a228ff6c5c72, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6395787032299807027
 GameObject:
   m_ObjectHideFlags: 0
