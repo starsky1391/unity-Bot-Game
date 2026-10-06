@@ -12,7 +12,8 @@ namespace HollowDemo
         public MapCell[] exploredMapCells;
         public string[] equippedItems;
         public int selectedEquipment;
-        public int version = 4;
+        public int version = 5;
+        public bool doubleJump, wallClimb, dash, grapple;
         public int flaskCapacity, flaskCharges, crystals;
         public int manaFlaskCapacity, manaFlaskCharges;
         public int checkpointRoom = -1;

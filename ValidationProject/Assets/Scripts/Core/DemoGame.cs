@@ -23,6 +23,8 @@ namespace HollowDemo
         public int Crystals { get; private set; }
         [System.NonSerialized] public Inventory inventory = new Inventory();
         public WorldMap World { get; private set; }
+        public WorldActivation Activation { get; private set; }
+        public string mapScene;
         public Npc[] Npcs { get; private set; }
         public BossArena[] BossArenas { get; private set; }
         public BossArena ActiveBoss { get; set; }
@@ -47,6 +49,7 @@ namespace HollowDemo
         public float Volume { get; private set; }
         GameScreen settingsReturn;
         Pickup[] pickups;
+        AbilityUnlock[] abilityUnlocks;
         int checkpointRoom = -1;
         string checkpointId;
         readonly HashSet<string> activatedCheckpointIds = new HashSet<string>();
@@ -60,6 +63,14 @@ namespace HollowDemo
         {
             Instance = this;
             Time.timeScale = 0;
+            var follow = FindObjectOfType<CameraFollow>();
+            if (follow != null)
+            {
+                var gameCamera = follow.GetComponent<Camera>();
+                gameCamera.enabled = true;
+                foreach (var camera in FindObjectsOfType<Camera>())
+                    if (camera != gameCamera && camera.CompareTag("MainCamera")) camera.enabled = false;
+            }
             Physics2D.gravity = new Vector2(0, -9.81f);
             Physics2D.IgnoreLayerCollision(9, 10);
             Physics2D.IgnoreLayerCollision(10, 10);
@@ -68,8 +79,14 @@ namespace HollowDemo
             if (!Application.isBatchMode) UnityEngine.Screen.fullScreen = PlayerPrefs.GetInt("FullScreen", 0) == 1;
         }
 
-        void Start()
+        IEnumerator Start()
         {
+            if (!string.IsNullOrEmpty(mapScene) && !UnityEngine.SceneManagement.SceneManager.GetSceneByName(mapScene).isLoaded)
+                yield return UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(mapScene, UnityEngine.SceneManagement.LoadSceneMode.Additive);
+            var follow = FindObjectOfType<CameraFollow>();
+            if (follow != null)
+                foreach (var camera in FindObjectsOfType<Camera>())
+                    if (camera != follow.GetComponent<Camera>() && camera.CompareTag("MainCamera")) camera.enabled = false;
             Player = FindObjectOfType<PlayerMotor>();
             items = Resources.LoadAll<ItemDefinition>("Items");
             InitializeLevel();
@@ -77,11 +94,16 @@ namespace HollowDemo
 
         bool InitializeLevel()
         {
-            Checkpoints = FindObjectsOfType<Checkpoint>(true);
-            BossArenas = FindObjectsOfType<BossArena>(true);
-            Enemies = FindObjectsOfType<EnemyBrain>(true).Where(e => e.GetComponentInParent<BossArena>() == null).ToArray();
-            pickups = FindObjectsOfType<Pickup>(true);
-            Npcs = FindObjectsOfType<Npc>(true);
+            Activation = GetComponent<WorldActivation>();
+            if (Activation == null) Activation = gameObject.AddComponent<WorldActivation>();
+            Activation.RestoreAll();
+            Checkpoints = FindObjectsOfType<Checkpoint>();
+            BossArenas = FindObjectsOfType<BossArena>();
+            Enemies = FindObjectsOfType<EnemyBrain>(true)
+                .Where(e => HasActiveParents(e) && e.GetComponentInParent<BossArena>() == null).ToArray();
+            pickups = FindObjectsOfType<Pickup>(true).Where(HasActiveParents).ToArray();
+            abilityUnlocks = FindObjectsOfType<AbilityUnlock>(true).Where(HasActiveParents).ToArray();
+            Npcs = FindObjectsOfType<Npc>();
             World = FindObjectOfType<WorldMap>();
             if (World == null) World = new GameObject("关卡（自动初始化）").AddComponent<WorldMap>();
             if (!World.Initialize(Checkpoints, FindObjectsOfType<GroundSurface>(true), out string error))
@@ -91,7 +113,14 @@ namespace HollowDemo
                 Debug.LogWarning(error);
                 return false;
             }
+            Activation.Build();
             return true;
+        }
+
+        static bool HasActiveParents(Component component)
+        {
+            // 保留已死亡或已拾取的实例，但排除被整个关闭的旧关卡。
+            return component.transform.parent == null || component.transform.parent.gameObject.activeInHierarchy;
         }
 
         void Update()
@@ -189,6 +218,7 @@ namespace HollowDemo
             activatedCheckpointIds.Clear();
             activatedCheckpoints.Clear();
             collectedPickups.Clear();
+            Player.enableDoubleJump = Player.enableWallClimb = Player.enableDash = Player.enableGrapple = false;
             defeatedEnemies.Clear();
             discoveredLandmarks.Clear();
             Completed = false;
@@ -204,8 +234,12 @@ namespace HollowDemo
             try
             {
                 var data = SaveStore.Read();
-                if (data == null || (data.version < 1 || data.version > 4)) { ShowNotice("存档格式不支持"); return; }
+                if (data == null || (data.version < 1 || data.version > 5)) { ShowNotice("存档格式不支持"); return; }
                 ResetWorld();
+                Player.enableDoubleJump = data.doubleJump;
+                Player.enableWallClimb = data.wallClimb;
+                Player.enableDash = data.dash;
+                Player.enableGrapple = data.grapple;
                 World.RestoreFog(MapFog, data);
                 if (data.equippedItems != null)
                     for (int i = 0; i < Mathf.Min(3, data.equippedItems.Length); i++)
@@ -254,6 +288,8 @@ namespace HollowDemo
                 { slot = i, itemId = inventory.slots[i].item.id, count = inventory.slots[i].count });
             var data = new SaveData
             {
+                doubleJump = Player.enableDoubleJump, wallClimb = Player.enableWallClimb,
+                dash = Player.enableDash, grapple = Player.enableGrapple,
                 manaFlaskCapacity = ManaFlaskCapacity, manaFlaskCharges = ManaFlaskCharges,
                 flaskCapacity = FlaskCapacity, flaskCharges = FlaskCharges, crystals = Crystals,
                 checkpointRoom = checkpointRoom,
@@ -506,6 +542,7 @@ namespace HollowDemo
                 }
             foreach (var arena in BossArenas) arena.ResetEncounter();
             foreach (var pickup in pickups) pickup.gameObject.SetActive(!collectedPickups.Contains(pickup.persistentId));
+            foreach (var unlock in abilityUnlocks) unlock.gameObject.SetActive(!collectedPickups.Contains(unlock.persistentId));
             foreach (var point in Checkpoints)
             {
                 point.activated = activatedCheckpointIds.Contains(point.persistentId);
@@ -515,6 +552,7 @@ namespace HollowDemo
             var checkpoint = Checkpoints.FirstOrDefault(p => p.persistentId == checkpointId);
             if (checkpoint == null && checkpointRoom >= 0) checkpoint = Checkpoints.FirstOrDefault(p => p.roomId == checkpointRoom);
             Transform spawn = checkpoint == null ? World.startPoint : checkpoint.spawnPoint;
+            if (spawn != null) Activation.ActivateAt(spawn.position);
             if (!World.TryGetSpawn(spawn, out var position))
             {
                 HasRun = false;
@@ -529,6 +567,7 @@ namespace HollowDemo
             Player.Respawn(position);
             Physics2D.SyncTransforms();
             FindObjectOfType<CameraFollow>().Snap();
+            Activation.ActivateAt(position);
             SaveProgress();
             yield return FadeTo(0);
             body.simulated = true;

@@ -76,11 +76,14 @@ namespace HollowDemo
             game.NewGame();yield return new WaitForSecondsRealtime(.6f);
             Check(game.HasRun&&!game.Player.Dead,"valid new game recovers");
             game.SaveProgress();
+            point.isInitialSpawn=true;
             DestroyImmediate(world);
             game.NewGame();
-            Check(game.Screen==GameScreen.MainMenu && !game.Transitioning && game.Fade==0,"missing map cannot start permanent black screen");
+            yield return new WaitForSecondsRealtime(.6f);
+            Check(game.HasRun && !game.Transitioning && game.Fade==0 && game.World!=null,"missing map manager automatically initializes from checkpoint");
             game.ContinueGame();
-            Check(game.Screen==GameScreen.MainMenu && game.Fade==0,"missing map continue stays outside fade");
+            yield return new WaitForSecondsRealtime(.6f);
+            Check(game.HasRun && game.Fade==0,"auto-initialized map supports continue");
             Debug.Log("DEMO_SMOKE_OK: global map movement, spawn, camera, save and one-time pickup.");
         }
     }

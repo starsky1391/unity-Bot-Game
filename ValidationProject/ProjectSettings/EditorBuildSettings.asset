@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/HollowGeometry.unity
     guid: 9cf230546aa5eba4a907ad9f25e02452
+  - enabled: 1
+    path: Assets/Scenes/Rooms/bot map.unity
+    guid: 9f2b10bb59d537b4ebeca35a70a8fcdd
   m_configObjects: {}

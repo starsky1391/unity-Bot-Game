@@ -34,6 +34,7 @@ public sealed class ScenePrefabIds : AssetModificationProcessor
         if (EditorApplication.isPlayingOrWillChangePlaymode) return;
         var pickups = new HashSet<string>();
         var checkpoints = new HashSet<string>();
+        var waveBossIds = new HashSet<string>();
         for (int i = 0; i < SceneManager.sceneCount; i++)
         {
             var scene = SceneManager.GetSceneAt(i);
@@ -48,6 +49,27 @@ public sealed class ScenePrefabIds : AssetModificationProcessor
                     PrefabUtility.RecordPrefabInstancePropertyModifications(pickup);
                     EditorSceneManager.MarkSceneDirty(scene);
                 }
+            foreach (var unlock in scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<AbilityUnlock>(true)))
+                if (string.IsNullOrEmpty(unlock.persistentId) || !pickups.Add(unlock.persistentId))
+                {
+                    unlock.persistentId = Guid.NewGuid().ToString("N");
+                    pickups.Add(unlock.persistentId);
+                    EditorUtility.SetDirty(unlock);
+                    PrefabUtility.RecordPrefabInstancePropertyModifications(unlock);
+                    EditorSceneManager.MarkSceneDirty(scene);
+                }
+            foreach (var wave in scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<WaveBoss>(true)))
+            {
+                var boss = wave.GetComponent<BossArena>().boss;
+                if (string.IsNullOrEmpty(boss.persistentId) || !waveBossIds.Add(boss.persistentId))
+                {
+                    boss.persistentId = Guid.NewGuid().ToString("N");
+                    waveBossIds.Add(boss.persistentId);
+                    EditorUtility.SetDirty(boss);
+                    PrefabUtility.RecordPrefabInstancePropertyModifications(boss);
+                    EditorSceneManager.MarkSceneDirty(scene);
+                }
+            }
             foreach (var point in scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Checkpoint>(true)))
             {
                 bool changed = room != null && point.roomId != room.roomId;

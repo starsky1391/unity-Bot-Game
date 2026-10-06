@@ -13,6 +13,7 @@ namespace HollowDemo
         public float moveSpeed = 2, detectionRange = 8, warningTime = .7f, attackTime = .4f, recoveryTime = 1.1f;
         public Color baseColor = Color.red;
         public string persistentId;
+        [HideInInspector] public bool runtimeSummon;
         public CrystalDropSettings crystalDrops;
         public bool overrideCrystalDrop;
         [Min(0)] public int crystalDropAmount = 3;
@@ -25,6 +26,7 @@ namespace HollowDemo
         SpriteRenderer visual, marker, shield;
         Vector2 target, attackDirection;
         float nextPhase, staggerUntil, idleUntil;
+        float regionPausedAt = -1;
         int facing = -1;
         bool fired;
         bool Flying => kind == EnemyKind.Pursuer || kind == EnemyKind.Diver;
@@ -41,9 +43,18 @@ namespace HollowDemo
             ResetEnemy();
         }
 
+        public void PauseForRegion() { if (Health > 0) regionPausedAt = Time.time; }
+        public void ResumeForRegion()
+        {
+            if (regionPausedAt < 0) return;
+            float elapsed = Time.time - regionPausedAt;
+            nextPhase += elapsed; staggerUntil += elapsed; idleUntil += elapsed;
+            regionPausedAt = -1;
+        }
         public void ResetEnemy()
         {
             gameObject.SetActive(true);
+            regionPausedAt = -1;
             transform.position = Home;
             body.velocity = Vector2.zero;
             body.gravityScale = Flying ? 0 : 3.2f;
@@ -68,7 +79,7 @@ namespace HollowDemo
             if (body.position.y < DemoGame.Instance.World.FallY)
             {
                 Health = 0;
-                DemoGame.Instance.RecordEnemyDeath(persistentId);
+                DemoGame.Instance.RecordEnemyDeath(persistentId, 0, !runtimeSummon);
                 gameObject.SetActive(false);
                 return;
             }
@@ -226,18 +237,23 @@ namespace HollowDemo
         public bool TakeHit(int damage, Vector2 source, int direction)
         {
             if (Health <= 0 || !box.enabled) return false;
+            var waveBoss = GetComponentInParent<WaveBoss>();
+            bool isCore = waveBoss != null && waveBoss.GetComponent<BossArena>().boss == this;
+            if (isCore && !waveBoss.CanHitCore) return false;
             if (kind == EnemyKind.Shield && Mathf.Sign(source.x - body.position.x) == facing)
             {
                 DemoGame.Instance.ShowNotice("盾牌挡住了攻击，尝试绕到背后");
                 return false;
             }
             Health -= damage;
+            if (isCore) waveBoss.CoreStruck();
             if (Health <= 0)
             {
-                DemoGame.Instance.RecordEnemyDeath(persistentId, overrideCrystalDrop || crystalDrops == null ? crystalDropAmount : crystalDrops.amount);
+                DemoGame.Instance.RecordEnemyDeath(persistentId, overrideCrystalDrop || crystalDrops == null ? crystalDropAmount : crystalDrops.amount, !runtimeSummon);
                 gameObject.SetActive(false);
                 return true;
             }
+            if (isCore) return true;
             staggerUntil = Time.time + .16f;
             body.velocity = new Vector2(direction * 5, Flying ? 0 : 3);
             visual.color = Color.white;

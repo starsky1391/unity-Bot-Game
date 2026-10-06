@@ -9,14 +9,17 @@ ScriptsOnlyBuild:
     - HollowDemo.CameraFollow
     - HollowDemo.Checkpoint
     - HollowDemo.CrystalDropSettings
+    - HollowDemo.DamageWater
     - HollowDemo.DemoGame
     - HollowDemo.DemoUI
     - HollowDemo.DialogueCanvas
     - HollowDemo.DialogueDefinition
+    - HollowDemo.DropPlatform
     - HollowDemo.EnemyBrain
     - HollowDemo.FlaskAllocationCanvas
     - HollowDemo.GrapplePoint
     - HollowDemo.GroundSurface
+    - HollowDemo.InstantDeathZone
     - HollowDemo.ItemDefinition
     - HollowDemo.MainMenuCanvas
     - HollowDemo.MapCanvasGraphic
@@ -27,6 +30,7 @@ ScriptsOnlyBuild:
     - HollowDemo.ShopDefinition
     - HollowDemo.ShopOfferView
     - HollowDemo.SkillOrb
+    - HollowDemo.WorldActivation
     - HollowDemo.WorldLabel
     - HollowDemo.WorldMap
     UnityEngine.UI.dll:
@@ -157,85 +161,91 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1508}
     - Class: 114
-      Script: {instanceID: 1530}
+      Script: {instanceID: 1532}
     - Class: 114
-      Script: {instanceID: 1544}
+      Script: {instanceID: 1548}
     - Class: 114
-      Script: {instanceID: 1560}
+      Script: {instanceID: 1564}
     - Class: 114
-      Script: {instanceID: 1578}
+      Script: {instanceID: 1582}
     - Class: 114
-      Script: {instanceID: 1588}
+      Script: {instanceID: 1592}
     - Class: 114
-      Script: {instanceID: 1630}
+      Script: {instanceID: 1600}
     - Class: 114
-      Script: {instanceID: 1662}
+      Script: {instanceID: 1636}
     - Class: 114
-      Script: {instanceID: 1680}
+      Script: {instanceID: 1668}
     - Class: 114
-      Script: {instanceID: 1702}
+      Script: {instanceID: 1686}
     - Class: 114
       Script: {instanceID: 1708}
     - Class: 114
-      Script: {instanceID: 1712}
+      Script: {instanceID: 1714}
     - Class: 114
-      Script: {instanceID: 1728}
+      Script: {instanceID: 1718}
     - Class: 114
-      Script: {instanceID: 1732}
+      Script: {instanceID: 1736}
     - Class: 114
-      Script: {instanceID: 1744}
+      Script: {instanceID: 1740}
     - Class: 114
-      Script: {instanceID: 1748}
+      Script: {instanceID: 1756}
     - Class: 114
-      Script: {instanceID: 1754}
+      Script: {instanceID: 1758}
     - Class: 114
-      Script: {instanceID: 1762}
+      Script: {instanceID: 1764}
     - Class: 114
       Script: {instanceID: 1772}
     - Class: 114
-      Script: {instanceID: 1780}
-    - Class: 114
       Script: {instanceID: 1782}
     - Class: 114
-      Script: {instanceID: 1788}
+      Script: {instanceID: 1790}
     - Class: 114
-      Script: {instanceID: 1802}
+      Script: {instanceID: 1792}
     - Class: 114
-      Script: {instanceID: 1814}
+      Script: {instanceID: 1798}
     - Class: 114
-      Script: {instanceID: 1828}
+      Script: {instanceID: 1812}
     - Class: 114
-      Script: {instanceID: 1834}
+      Script: {instanceID: 1824}
     - Class: 114
-      Script: {instanceID: 1896}
+      Script: {instanceID: 1838}
     - Class: 114
-      Script: {instanceID: 1898}
+      Script: {instanceID: 1844}
+    - Class: 114
+      Script: {instanceID: 1856}
+    - Class: 114
+      Script: {instanceID: 1890}
+    - Class: 114
+      Script: {instanceID: 1908}
     - Class: 114
       Script: {instanceID: 1910}
     - Class: 114
-      Script: {instanceID: 1924}
+      Script: {instanceID: 1922}
     - Class: 114
-      Script: {instanceID: 1970}
+      Script: {instanceID: 1936}
     - Class: 114
-      Script: {instanceID: 1972}
+      Script: {instanceID: 1982}
     - Class: 114
-      Script: {instanceID: 1986}
+      Script: {instanceID: 1984}
     - Class: 114
       Script: {instanceID: 1998}
     - Class: 114
       Script: {instanceID: 2010}
     - Class: 114
-      Script: {instanceID: 2020}
+      Script: {instanceID: 2022}
     - Class: 114
-      Script: {instanceID: 2028}
+      Script: {instanceID: 2032}
     - Class: 114
-      Script: {instanceID: 2034}
+      Script: {instanceID: 2040}
     - Class: 114
-      Script: {instanceID: 2048}
+      Script: {instanceID: 2046}
     - Class: 114
-      Script: {instanceID: 2064}
+      Script: {instanceID: 2060}
     - Class: 114
-      Script: {instanceID: 2066}
+      Script: {instanceID: 2076}
+    - Class: 114
+      Script: {instanceID: 2078}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -256,6 +266,61 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 225
       Script: {instanceID: 0}
+    Assets/Scenes/Rooms/bot map.unity:
+    - Class: 1
+      Script: {instanceID: 0}
+    - Class: 4
+      Script: {instanceID: 0}
+    - Class: 20
+      Script: {instanceID: 0}
+    - Class: 21
+      Script: {instanceID: 0}
+    - Class: 28
+      Script: {instanceID: 0}
+    - Class: 48
+      Script: {instanceID: 0}
+    - Class: 61
+      Script: {instanceID: 0}
+    - Class: 62
+      Script: {instanceID: 0}
+    - Class: 81
+      Script: {instanceID: 0}
+    - Class: 104
+      Script: {instanceID: 0}
+    - Class: 108
+      Script: {instanceID: 0}
+    - Class: 114
+      Script: {instanceID: 1548}
+    - Class: 114
+      Script: {instanceID: 1764}
+    - Class: 114
+      Script: {instanceID: 1792}
+    - Class: 114
+      Script: {instanceID: 1838}
+    - Class: 114
+      Script: {instanceID: 1844}
+    - Class: 114
+      Script: {instanceID: 1866}
+    - Class: 115
+      Script: {instanceID: 0}
+    - Class: 128
+      Script: {instanceID: 0}
+    - Class: 157
+      Script: {instanceID: 0}
+    - Class: 196
+      Script: {instanceID: 0}
+    - Class: 212
+      Script: {instanceID: 0}
+    - Class: 213
+      Script: {instanceID: 0}
+    - Class: 222
+      Script: {instanceID: 0}
+    - Class: 223
+      Script: {instanceID: 0}
+    - Class: 224
+      Script: {instanceID: 0}
+    - Class: 251
+      Script: {instanceID: 0}
   scriptHashData:
   - hash:
       serializedVersion: 2
@@ -269,6 +334,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
     className: ScrollRect
+  - hash:
+      serializedVersion: 2
+      Hash: e23b16bb3ae8e7bd0cff08383c3789a5
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: AutoInitializationSmokeProbe
   - hash:
       serializedVersion: 2
       Hash: bfe0359c1d37d2162edd6a1d79408c09
@@ -391,13 +462,19 @@ ScriptsOnlyBuild:
     className: Toggle
   - hash:
       serializedVersion: 2
+      Hash: 9d977bb91a2bccb2261afe22bdb08a48
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: ActivationSmokeProbe
+  - hash:
+      serializedVersion: 2
       Hash: 60c2926bebe0050399bc08e5766eabf5
     assemblyName: Assembly-CSharp
     namespaceName: HollowDemo
     className: RoomMapDefinition
   - hash:
       serializedVersion: 2
-      Hash: a695014842f3cbb123d49048700c0b41
+      Hash: 92c719547d34d39ef01858a67b676074
     assemblyName: Assembly-CSharp
     namespaceName: HollowDemo
     className: DemoGame
@@ -547,6 +624,12 @@ ScriptsOnlyBuild:
     className: Mask
   - hash:
       serializedVersion: 2
+      Hash: 4be84c38b631dd7617af67242c6bf151
+    assemblyName: Assembly-CSharp
+    namespaceName: HollowDemo
+    className: WorldActivation
+  - hash:
+      serializedVersion: 2
       Hash: 1ab136900c0edaeeb49424c852595030
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
@@ -692,4 +775,5 @@ ScriptsOnlyBuild:
   platform: 19
   scenePathNames:
   - Assets/Scenes/HollowGeometry.unity
+  - Assets/Scenes/Rooms/bot map.unity
   playerPath: C:/1Project/project_godot/animal/ValidationProject/Builds/Windows/HollowGeometry.exe

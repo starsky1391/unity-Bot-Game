@@ -17,14 +17,16 @@ namespace HollowDemo
         [HideInInspector] public LegacyFogRegion[] legacyFogRegions = Array.Empty<LegacyFogRegion>();
         GroundSurface[] terrain = Array.Empty<GroundSurface>();
         bool usesCheckpointSpawn;
+        float fallOffsetY;
         public Vector2 MapPosition(Vector3 worldPosition) => (Vector2)transform.InverseTransformPoint(worldPosition) * mapScale;
-        public float FallY => fallBoundary != null ? fallBoundary.position.y : terrain.Min(g => g.GetComponent<Collider2D>().bounds.min.y) - 5;
+        public float FallY => fallBoundary != null ? fallBoundary.position.y : transform.position.y + fallOffsetY;
 
         public bool Initialize(Checkpoint[] checkpoints, GroundSurface[] surfaces, out string error)
         {
             error = null;
             terrain = surfaces.Where(g => g.isActiveAndEnabled && g.GetComponent<Collider2D>().enabled).ToArray();
             if (terrain.Length == 0) { error = "关卡没有地面，请放入 Ground 或 Platform 预制件。"; return false; }
+            fallOffsetY = terrain.Min(g => g.GetComponent<Collider2D>().bounds.min.y) - transform.position.y - 5;
             var initial = checkpoints.Where(p => p.isInitialSpawn && p.gameObject.activeInHierarchy).ToArray();
             if (initial.Length > 1) { error = "多个检查点勾选了初始出生点，请只保留一个。"; return false; }
             if (initial.Length == 1)

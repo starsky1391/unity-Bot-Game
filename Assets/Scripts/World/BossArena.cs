@@ -29,6 +29,7 @@ namespace HollowDemo
             if(game.ActiveBoss==this) game.ActiveBoss=null;
             State=game.EnemyDefeated(boss.persistentId)?BossEncounterState.Defeated:BossEncounterState.Idle;
             DisplayTime=0;
+            var waves=GetComponent<WaveBoss>();if(waves!=null)waves.ResetFight();
             if(State==BossEncounterState.Idle) boss.ResetEnemy();
             HideBoss();
             leftBarrier.SetActive(false);rightBarrier.SetActive(false);
@@ -48,6 +49,7 @@ namespace HollowDemo
             boss.transform.position=spawnPoint.position;
             var body=boss.GetComponent<Rigidbody2D>();body.position=spawnPoint.position;body.velocity=Vector2.zero;body.simulated=false;
             boss.enabled=false;
+            var waves=GetComponent<WaveBoss>();if(waves!=null)boss.GetComponent<Collider2D>().enabled=false;
         }
         void Update()
         {
@@ -57,7 +59,7 @@ namespace HollowDemo
             if(game.Paused) return;
             DisplayTime+=Time.deltaTime;
             if(State==BossEncounterState.Introduction && DisplayTime>=introDuration)
-            {State=BossEncounterState.Fighting;DisplayTime=0;boss.enabled=true;boss.GetComponent<Rigidbody2D>().simulated=true;}
+            {State=BossEncounterState.Fighting;DisplayTime=0;var waves=GetComponent<WaveBoss>();if(waves!=null)waves.BeginWaves();else{boss.enabled=true;boss.GetComponent<Rigidbody2D>().simulated=true;}}
             else if(State==BossEncounterState.Defeated && DisplayTime>=victoryDuration) game.ActiveBoss=null;
         }
         public void Victory()

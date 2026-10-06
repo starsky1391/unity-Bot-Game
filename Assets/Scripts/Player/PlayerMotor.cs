@@ -7,7 +7,7 @@ namespace HollowDemo
     public sealed class PlayerMotor : MonoBehaviour
     {
         [Header("能力开关")]
-        public bool enableDoubleJump = true, enableWallClimb = true, enableDash = true, enableGrapple = true;
+        public bool enableDoubleJump, enableWallClimb, enableDash, enableGrapple;
         public float moveSpeed = 7, jumpSpeed = 11, secondJumpSpeed = 10.5f;
         public float dashSpeed = 24, dashDuration = .18f, dashCooldown = .45f;
         public float climbSpeed = 4, wallSlideSpeed = 1.5f, wallJumpLock = .18f;

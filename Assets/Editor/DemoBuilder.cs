@@ -308,6 +308,22 @@ public static class DemoBuilder
     public static void Validate()
     {
         if (SceneManager.GetActiveScene().path != ScenePath) EditorSceneManager.OpenScene(ScenePath);
+        var configuredGame = UnityEngine.Object.FindObjectOfType<DemoGame>();
+        if (configuredGame != null && !string.IsNullOrEmpty(configuredGame.mapScene))
+        {
+            var mapPath = EditorBuildSettings.scenes.FirstOrDefault(scene => scene.enabled && Path.GetFileNameWithoutExtension(scene.path) == configuredGame.mapScene)?.path;
+            Require(mapPath != null, "configured map included in build");
+            if (!SceneManager.GetSceneByPath(mapPath).isLoaded) EditorSceneManager.OpenScene(mapPath, OpenSceneMode.Additive);
+            var points = UnityEngine.Object.FindObjectsOfType<Checkpoint>().Where(point => point.isInitialSpawn).ToArray();
+            Require(points.Length == 1 && points[0].spawnPoint != null, "one initial checkpoint in map");
+            Require(UnityEngine.Object.FindObjectsOfType<GroundSurface>().Length > 0, "map terrain available");
+            Physics2D.SyncTransforms();
+            var floor = Physics2D.BoxCast((Vector2)points[0].spawnPoint.position + Vector2.up * .1f, new Vector2(.65f,.1f), 0, Vector2.down, 4, 1 << 8);
+            Require(floor.collider != null && floor.normal.y > .5f, "initial checkpoint over safe ground");
+            Require(configuredGame.GetComponent<WorldActivation>() != null, "runtime map activation configured");
+            Debug.Log("DEMO_VALIDATE_OK: configured map, initial checkpoint and activation.");
+            return;
+        }
         var world = UnityEngine.Object.FindObjectOfType<WorldMap>();
         Require(world != null && world.startPoint.IsChildOf(world.transform) && world.fallBoundary.IsChildOf(world.transform), "map-relative spawn and death line");
         Require(world.TryGetSpawn(world.startPoint, out _), "safe spawn over terrain");

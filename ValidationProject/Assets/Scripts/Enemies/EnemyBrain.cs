@@ -25,6 +25,7 @@ namespace HollowDemo
         SpriteRenderer visual, marker, shield;
         Vector2 target, attackDirection;
         float nextPhase, staggerUntil, idleUntil;
+        float regionPausedAt = -1;
         int facing = -1;
         bool fired;
         bool Flying => kind == EnemyKind.Pursuer || kind == EnemyKind.Diver;
@@ -41,9 +42,18 @@ namespace HollowDemo
             ResetEnemy();
         }
 
+        public void PauseForRegion() { if (Health > 0) regionPausedAt = Time.time; }
+        public void ResumeForRegion()
+        {
+            if (regionPausedAt < 0) return;
+            float elapsed = Time.time - regionPausedAt;
+            nextPhase += elapsed; staggerUntil += elapsed; idleUntil += elapsed;
+            regionPausedAt = -1;
+        }
         public void ResetEnemy()
         {
             gameObject.SetActive(true);
+            regionPausedAt = -1;
             transform.position = Home;
             body.velocity = Vector2.zero;
             body.gravityScale = Flying ? 0 : 3.2f;
