@@ -17,8 +17,15 @@ namespace HollowDemo
             game.SetScreen(GameScreen.Pause);
             var player = game.Player;
             Check(!player.enableDoubleJump && !player.enableWallClimb && !player.enableDash && !player.enableGrapple, "new game abilities must be disabled");
-            var unlock = FindObjectOfType<AbilityUnlock>(true);
+            var unlock = System.Linq.Enumerable.First(FindObjectsOfType<AbilityUnlock>(true), u => u.persistentId == "ability_test");
+            var hint = AbilityHintCanvas.Instance;hint.displayDuration = 1;
+            player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+            game.SetScreen(GameScreen.None);
             unlock.Interact(game);
+            Check(game.Screen == GameScreen.None && Time.timeScale == 1, "ability hint does not pause gameplay");
+            Check(hint.panel.activeSelf && hint.description.text.Contains("Space") && hint.description.text.Contains("K") && !hint.description.text.Contains("Shift"), "matching keys combined");
+            yield return new WaitForSecondsRealtime(1.2f);
+            Check(!hint.panel.activeSelf, "hint hides automatically");
             Check(player.enableDoubleJump && player.enableGrapple && !player.enableDash && !player.enableWallClimb, "selected abilities only");
             Check(!unlock.gameObject.activeSelf && game.PickupCollected(unlock.persistentId), "one time collection");
             game.ContinueGame();

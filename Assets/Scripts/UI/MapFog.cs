@@ -42,6 +42,26 @@ namespace HollowDemo
                 foreach (var cell in saved) cells.Add(new Vector3Int(cell.room, cell.x, cell.y));
         }
 
+        public IEnumerable<Rect> VisibleRects(int room, Rect bounds)
+        {
+            for (int y = Mathf.FloorToInt(bounds.yMin / CellSize); y < Mathf.CeilToInt(bounds.yMax / CellSize); y++)
+            {
+                int start = int.MinValue;
+                int first = Mathf.FloorToInt(bounds.xMin / CellSize), last = Mathf.CeilToInt(bounds.xMax / CellSize);
+                for (int x = first; x <= last; x++)
+                {
+                    bool visible = x < last && cells.Contains(new Vector3Int(room, x, y));
+                    if (visible && start == int.MinValue) start = x;
+                    if (!visible && start != int.MinValue)
+                    {
+                        yield return Rect.MinMaxRect(Mathf.Max(bounds.xMin, start * CellSize), Mathf.Max(bounds.yMin, y * CellSize),
+                            Mathf.Min(bounds.xMax, x * CellSize), Mathf.Min(bounds.yMax, (y + 1) * CellSize));
+                        start = int.MinValue;
+                    }
+                }
+            }
+        }
+
         public IEnumerable<Vector2[]> VisibleSegments(int room, Vector2 from, Vector2 to)
         {
             Vector2 delta = to - from;

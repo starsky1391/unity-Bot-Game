@@ -7,6 +7,48 @@ using UnityEngine;
 
 public static class MapAuthoring
 {
+    [MenuItem("洞穴 Demo/更新整体地图外轮廓")]
+    public static void UpdateWholeMapOutline()
+    {
+        if(!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())return;
+        var scene=EditorSceneManager.OpenScene("Assets/Scenes/Rooms/bot map.unity");
+        Physics2D.SyncTransforms();
+        var grounds=UnityEngine.Object.FindObjectsOfType<GroundSurface>().Where(g=>g.GetComponent<DropPlatform>()==null && g.GetComponent<Collider2D>().enabled).ToArray();
+        var spawn=UnityEngine.Object.FindObjectsOfType<Checkpoint>().Single(c=>c.isInitialSpawn).spawnPoint.position;
+        var temporary=new GameObject("临时轮廓合并");
+        temporary.AddComponent<Rigidbody2D>().bodyType=RigidbodyType2D.Static;
+        var composite=temporary.AddComponent<CompositeCollider2D>();composite.geometryType=CompositeCollider2D.GeometryType.Outlines;composite.generationType=CompositeCollider2D.GenerationType.Manual;
+        foreach(var ground in grounds)
+        {
+            var bounds=ground.GetComponent<Collider2D>().bounds;
+            var collider=temporary.AddComponent<BoxCollider2D>();collider.offset=bounds.center;collider.size=bounds.size;collider.usedByComposite=true;
+        }
+        composite.GenerateGeometry();
+        Vector2[] selected=null;float selectedArea=float.PositiveInfinity;float nearest=float.PositiveInfinity;
+        for(int path=0;path<composite.pathCount;path++)
+        {
+            var points=new Vector2[composite.GetPathPointCount(path)];composite.GetPath(path,points);
+            if(points.Length<3)continue;
+            bool inside=false;float area=0, distance=float.PositiveInfinity;
+            for(int n=0;n<points.Length;n++)
+            {
+                var a=points[n];var b=points[(n+1)%points.Length];area+=a.x*b.y-b.x*a.y;
+                if((a.y>spawn.y)!=(b.y>spawn.y) && spawn.x<(b.x-a.x)*(spawn.y-a.y)/(b.y-a.y)+a.x)inside=!inside;
+                var delta=b-a;var point=a+delta*Mathf.Clamp01(Vector2.Dot((Vector2)spawn-a,delta)/Mathf.Max(.000001f,delta.sqrMagnitude));distance=Mathf.Min(distance,Vector2.Distance(spawn,point));
+            }
+            area=Mathf.Abs(area);
+            if(inside && area<selectedArea){selected=points;selectedArea=area;}
+            else if(float.IsPositiveInfinity(selectedArea) && distance<nearest){selected=points;nearest=distance;}
+        }
+        UnityEngine.Object.DestroyImmediate(temporary);
+        if(selected==null)throw new InvalidOperationException("无法生成地图外轮廓");
+        var world=UnityEngine.Object.FindObjectOfType<WorldMap>();
+        if(world==null)world=new GameObject("地图数据").AddComponent<WorldMap>();
+        world.outline=selected.Select(p=>(Vector2)world.transform.InverseTransformPoint(p)).ToArray();world.startPoint=UnityEngine.Object.FindObjectsOfType<Checkpoint>().Single(c=>c.isInitialSpawn).spawnPoint;
+        EditorUtility.SetDirty(world);EditorSceneManager.SaveScene(scene);
+        Debug.Log("DEMO_MAP_OUTLINE_OK: "+selected.Length+" points; independent outline authored");
+    }
+
     public static void Calibrate()
     {
         EditorSceneManager.OpenScene("Assets/Scenes/HollowGeometry.unity");

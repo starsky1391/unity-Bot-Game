@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace HollowDemo
 {
@@ -13,6 +14,11 @@ namespace HollowDemo
         {
             if (game.PickupCollected(persistentId)) return;
             var player = game.Player;
+            var hints = new List<string>();
+            if (doubleJump && !player.enableDoubleJump) hints.Add("二段跳：在空中再次按 Space");
+            if (wallClimb && !player.enableWallClimb) hints.Add("爬墙：贴墙按 W / S，按 Space 蹬墙跳");
+            if (dash && !player.enableDash) hints.Add("冲刺：按 Shift");
+            if (grapple && !player.enableGrapple) hints.Add("钩爪：WASD 选择方向，按 K 抓取高亮钩点");
             player.enableDoubleJump |= doubleJump;
             player.enableWallClimb |= wallClimb;
             player.enableDash |= dash;
@@ -20,7 +26,12 @@ namespace HollowDemo
             game.RecordPickup(persistentId);
             gameObject.SetActive(false);
             game.SaveProgress();
-            game.ShowNotice("能力已解锁");
+            if (hints.Count > 0)
+            {
+                var keys = string.Join("\n", hints);
+                if (AbilityHintCanvas.Instance != null) AbilityHintCanvas.Instance.Show(keys);
+                else game.ShowNotice(keys);
+            }
         }
     }
 }

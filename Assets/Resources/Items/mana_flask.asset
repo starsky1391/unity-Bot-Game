@@ -20,5 +20,5 @@ MonoBehaviour:
   healing: 0
   manaRecovery: 50
   color: {r: 0.25, g: 0.5, b: 1, a: 1}
-  icon: {fileID: 0}
+  icon: {fileID: 1244116757555758805, guid: 4fc2f365f29c45243acedbca66892747, type: 3}
   retainWhenEmpty: 1

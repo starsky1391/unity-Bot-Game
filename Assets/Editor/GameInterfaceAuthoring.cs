@@ -9,6 +9,27 @@ using UnityEngine.UI;
 
 public static class GameInterfaceAuthoring
 {
+    [MenuItem("洞穴 Demo/生成能力按键提示 Canvas")]
+    public static void CreateAbilityHint()
+    {
+        const string path="Assets/Prefabs/UI/AbilityHint.prefab";
+        var root=new GameObject("能力提示 Canvas",typeof(RectTransform),typeof(Canvas),typeof(CanvasScaler),typeof(AbilityHintCanvas));
+        root.GetComponent<RectTransform>().sizeDelta=new Vector2(1280,720);root.transform.localScale=Vector3.one*.02f;
+        root.GetComponent<Canvas>().renderMode=RenderMode.WorldSpace;root.GetComponent<Canvas>().sortingOrder=22;
+        var scaler=root.GetComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;scaler.referenceResolution=new Vector2(1280,720);scaler.matchWidthOrHeight=.5f;
+        var panel=new GameObject("提示框",typeof(RectTransform),typeof(Image),typeof(CanvasGroup));var rect=panel.GetComponent<RectTransform>();rect.SetParent(root.transform,false);rect.anchorMin=rect.anchorMax=new Vector2(.5f,1);rect.pivot=new Vector2(.5f,1);rect.anchoredPosition=new Vector2(0,-35);rect.sizeDelta=new Vector2(580,170);
+        panel.GetComponent<Image>().color=new Color(.035f,.075f,.1f,.88f);panel.GetComponent<Image>().raycastTarget=false;panel.GetComponent<CanvasGroup>().blocksRaycasts=false;
+        var controller=root.GetComponent<AbilityHintCanvas>();controller.panel=panel;
+        for(int i=0;i<2;i++){
+            var go=new GameObject(i==0?"标题":"按键说明",typeof(RectTransform),typeof(Text));var r=go.GetComponent<RectTransform>();r.SetParent(rect,false);r.anchorMin=r.anchorMax=new Vector2(.5f,1);r.pivot=new Vector2(.5f,1);r.anchoredPosition=new Vector2(0,i==0?-12:-48);r.sizeDelta=new Vector2(550,i==0?30:112);
+            var text=go.GetComponent<Text>();text.font=Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");text.fontSize=i==0?24:20;text.color=Color.white;text.alignment=i==0?TextAnchor.MiddleCenter:TextAnchor.UpperLeft;text.raycastTarget=false;text.text=i==0?"获得新能力":"能力对应按键";if(i==1)controller.description=text;
+        }
+        PrefabUtility.SaveAsPrefabAsset(root,path);Object.DestroyImmediate(root);
+        var scene=EditorSceneManager.OpenScene("Assets/Scenes/HollowGeometry.unity");
+        if(Object.FindObjectOfType<AbilityHintCanvas>(true)==null)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(path),Object.FindObjectOfType<DemoGame>().transform);
+        EditorSceneManager.SaveScene(scene);AssetDatabase.SaveAssets();Debug.Log("DEMO_ABILITY_HINT_CANVAS_OK");
+    }
+
     [MenuItem("洞穴 Demo/生成 Canvas 游戏界面")]
     public static void Configure()
     {

@@ -8,11 +8,11 @@ namespace HollowDemo
     public sealed class MapCanvasGraphic : MaskableGraphic, IDragHandler, IScrollHandler
     {
         [UnityEngine.Serialization.FormerlySerializedAs("currentRoomColor")]
-        public Color outlineColor = new Color(.5f, .95f, .9f);
+        public Color groundColor = new Color(.2f, .5f, .6f);
         public Color checkpointColor = new Color(.4f, 1, .65f);
         public Color merchantColor = new Color(.9f, .68f, .32f);
         public Color playerColor = Color.white;
-        public float lineWidth = 2, iconSize = 12;
+        public float iconSize = 12;
         readonly MapViewport view = new MapViewport();
         DemoGame Game => DemoGame.Instance;
         Vector2 PlayerPosition => Game.World.MapPosition(Game.Player.transform.position);
@@ -48,12 +48,16 @@ namespace HollowDemo
             mesh.Clear();
             if (!Application.isPlaying || Game == null || Game.World == null) return;
             var world = Game.World;
-            for (int i = 0; i < world.outline.Length; i++)
+            var half = ViewRect.size / (view.Scale * 2);
+            var viewport = new Rect(view.Center - half, half * 2);
+            foreach (var ground in world.GroundRects)
             {
-                Vector2 a = world.outline[i] * world.mapScale;
-                Vector2 b = world.outline[(i + 1) % world.outline.Length] * world.mapScale;
-                foreach (var segment in Game.MapFog.VisibleSegments(0, a, b))
-                    Line(mesh, Project(segment[0]), Project(segment[1]), outlineColor);
+                if (!ground.Overlaps(viewport)) continue;
+                var clipped = Rect.MinMaxRect(Mathf.Max(ground.xMin, viewport.xMin), Mathf.Max(ground.yMin, viewport.yMin),
+                    Mathf.Min(ground.xMax, viewport.xMax), Mathf.Min(ground.yMax, viewport.yMax));
+                foreach (var area in Game.MapFog.VisibleRects(0, clipped))
+                    Quad(mesh, Project(new Vector2(area.xMin, area.yMin)), Project(new Vector2(area.xMin, area.yMax)),
+                        Project(new Vector2(area.xMax, area.yMax)), Project(new Vector2(area.xMax, area.yMin)), groundColor);
             }
             foreach (var checkpoint in Game.Checkpoints)
             {
@@ -68,11 +72,6 @@ namespace HollowDemo
                     Icon(mesh, Project(point), merchantColor, false);
             }
             Icon(mesh, Project(PlayerPosition), playerColor, false);
-        }
-        void Line(VertexHelper mesh, Vector2 from, Vector2 to, Color ink)
-        {
-            Vector2 normal = new Vector2(-(to - from).y, (to - from).x).normalized * lineWidth / 2;
-            Quad(mesh, from - normal, from + normal, to + normal, to - normal, ink);
         }
         void Icon(VertexHelper mesh, Vector2 p, Color ink, bool diamond)
         {

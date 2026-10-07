@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HollowDemo
@@ -16,6 +17,8 @@ namespace HollowDemo
         [Min(.01f)] public float mapScale = .4f;
         [HideInInspector] public LegacyFogRegion[] legacyFogRegions = Array.Empty<LegacyFogRegion>();
         GroundSurface[] terrain = Array.Empty<GroundSurface>();
+        readonly List<Rect> groundRects = new List<Rect>();
+        public IReadOnlyList<Rect> GroundRects => groundRects;
         bool usesCheckpointSpawn;
         float fallOffsetY;
         public Vector2 MapPosition(Vector3 worldPosition) => (Vector2)transform.InverseTransformPoint(worldPosition) * mapScale;
@@ -26,6 +29,25 @@ namespace HollowDemo
             error = null;
             terrain = surfaces.Where(g => g.isActiveAndEnabled && g.GetComponent<Collider2D>().enabled).ToArray();
             if (terrain.Length == 0) { error = "关卡没有地面，请放入 Ground 或 Platform 预制件。"; return false; }
+            Physics2D.SyncTransforms();
+            groundRects.Clear();
+            var rectangles = terrain.Where(g => g.GetComponent<DropPlatform>() == null).Select(g =>
+            {
+                var bounds = g.GetComponent<Collider2D>().bounds;
+                var min = MapPosition(bounds.min); var max = MapPosition(bounds.max);
+                return Rect.MinMaxRect(min.x, min.y, max.x, max.y);
+            });
+            foreach (var row in rectangles.GroupBy(r => (Mathf.RoundToInt(r.yMin * 1000), Mathf.RoundToInt(r.yMax * 1000))))
+            {
+                Rect merged = default; bool started = false;
+                foreach (var rect in row.OrderBy(r => r.xMin))
+                {
+                    if (!started) { merged = rect; started = true; }
+                    else if (rect.xMin <= merged.xMax + .001f) merged.xMax = Mathf.Max(merged.xMax, rect.xMax);
+                    else { groundRects.Add(merged); merged = rect; }
+                }
+                if (started) groundRects.Add(merged);
+            }
             fallOffsetY = terrain.Min(g => g.GetComponent<Collider2D>().bounds.min.y) - transform.position.y - 5;
             var initial = checkpoints.Where(p => p.isInitialSpawn && p.gameObject.activeInHierarchy).ToArray();
             if (initial.Length > 1) { error = "多个检查点勾选了初始出生点，请只保留一个。"; return false; }
@@ -52,14 +74,7 @@ namespace HollowDemo
         {
             Vector2 min = MapPosition(camera.ViewportToWorldPoint(new Vector3(0, 0, -camera.transform.position.z)));
             Vector2 max = MapPosition(camera.ViewportToWorldPoint(new Vector3(1, 1, -camera.transform.position.z)));
-            Vector2 outlineMin = outline[0] * mapScale, outlineMax = outlineMin;
-            foreach (var point in outline)
-            {
-                outlineMin = Vector2.Min(outlineMin, point * mapScale);
-                outlineMax = Vector2.Max(outlineMax, point * mapScale);
-            }
-            return Rect.MinMaxRect(Mathf.Max(min.x, outlineMin.x), Mathf.Max(min.y, outlineMin.y),
-                Mathf.Min(max.x, outlineMax.x), Mathf.Min(max.y, outlineMax.y));
+            return Rect.MinMaxRect(min.x, min.y, max.x, max.y);
         }
 
         public bool TryGetSpawn(Transform point, out Vector2 position)

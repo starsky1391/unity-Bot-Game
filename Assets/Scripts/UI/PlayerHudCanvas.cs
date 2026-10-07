@@ -10,6 +10,7 @@ namespace HollowDemo
         public Text crystalCount;
         public Image manaFill;
         public Image[] healthSquares;
+        public Material emptyHealthMaterial;
         public Color filledHealthColor = new Color(.45f, .92f, 1);
         public Color emptyHealthColor = new Color(.19f, .24f, .3f);
         public Image[] itemIcons;
@@ -78,6 +79,7 @@ namespace HollowDemo
             {
                 squares[i].gameObject.SetActive(i < game.Player.maxHealth);
                 squares[i].color = i < game.Player.Health ? filledHealthColor : emptyHealthColor;
+                squares[i].material = i < game.Player.Health ? null : emptyHealthMaterial;
             }
             for (int i = 0; i < 3; i++)
             {

@@ -18,6 +18,7 @@ MonoBehaviour:
   description: "\u68C0\u67E5\u70B9\u8865\u6EE1\u7684\u5FAA\u73AF\u8840\u74F6"
   stackLimit: 1
   healing: 2
+  manaRecovery: 50
   color: {r: 0.8, g: 0.9, b: 1, a: 1}
-  icon: {fileID: 0}
+  icon: {fileID: -6268545375647850069, guid: 67e4753397536c641ac340e51a0290ac, type: 3}
   retainWhenEmpty: 1

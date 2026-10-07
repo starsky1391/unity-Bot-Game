@@ -1,9 +1,47 @@
+using System.Linq;
 using HollowDemo;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 public static class SkillAuthoring {
+ [MenuItem("洞穴 Demo/匹配冲刺动画时长")]
+ public static void MatchDashAnimationDuration(){
+  var controller=AssetDatabase.LoadAssetAtPath<AnimatorController>("Assets/Prefabs/Animation/PlayerController(1).controller");
+  var state=controller.layers[0].stateMachine.states.Single(s=>s.state.name=="sprint").state;
+  var scene=EditorSceneManager.OpenScene("Assets/Scenes/HollowGeometry.unity");var player=Object.FindObjectOfType<PlayerMotor>();
+  state.speed=state.motion.averageDuration/player.dashDuration;EditorUtility.SetDirty(controller);AssetDatabase.SaveAssets();
+  var temporary=new GameObject("冲刺时长验证",typeof(SpriteRenderer),typeof(Animator));var animator=temporary.GetComponent<Animator>();animator.runtimeAnimatorController=controller;
+  animator.SetBool("IsDashing",true);animator.Play("sprint",0,0);animator.Update(0);animator.Update(player.dashDuration);
+  if(animator.GetCurrentAnimatorStateInfo(0).normalizedTime<.99f)throw new System.Exception("冲刺动画未完整播放");
+  Object.DestroyImmediate(temporary);Debug.Log("DEMO_DASH_DURATION_OK: speed="+state.speed+", duration="+player.dashDuration);
+ }
+ [MenuItem("洞穴 Demo/修复主角冲刺动画过渡")]
+ public static void FixDashTransitions(){
+  var controller=AssetDatabase.LoadAssetAtPath<AnimatorController>("Assets/Prefabs/Animation/PlayerController(1).controller");
+  var states=controller.layers[0].stateMachine.states.Select(s=>s.state).ToArray();
+  var dash=states.Single(s=>s.name=="sprint");
+  foreach(var state in states)foreach(var transition in state.transitions){
+   if(transition.destinationState==dash || state==dash && transition.destinationState!=null && (transition.destinationState.name=="Idle" || transition.destinationState.name=="jump")){
+    transition.hasExitTime=false;transition.duration=0;
+    if(state==dash && !transition.conditions.Any(c=>c.parameter=="IsDashing" && c.mode==AnimatorConditionMode.IfNot))transition.AddCondition(AnimatorConditionMode.IfNot,0,"IsDashing");
+   }
+   transition.interruptionSource=TransitionInterruptionSource.SourceThenDestination;
+  }
+  EditorUtility.SetDirty(controller);AssetDatabase.SaveAssets();
+  var temporary=new GameObject("冲刺动画验证",typeof(SpriteRenderer),typeof(Animator));var animator=temporary.GetComponent<Animator>();animator.runtimeAnimatorController=controller;
+  foreach(var start in new[]{"Idle","jump","attack"}){
+   animator.SetBool("IsAttacking",false);animator.SetBool("IsDashing",false);animator.SetBool("IsGrounded",start=="Idle");animator.Play(start,0,0);animator.Update(0);
+   animator.SetBool("IsDashing",true);animator.Update(.02f);
+   if(!animator.GetCurrentAnimatorStateInfo(0).IsName("sprint"))throw new System.Exception("无法立即进入冲刺: "+start);
+   animator.SetBool("IsGrounded",false);animator.SetBool("IsDashing",false);animator.Update(.02f);
+   if(!animator.GetCurrentAnimatorStateInfo(0).IsName("jump"))throw new System.Exception("空中冲刺不能返回跳跃");
+  }
+  animator.Rebind();animator.SetBool("IsGrounded",true);animator.SetBool("IsDashing",true);animator.Play("sprint",0,0);animator.Update(0);animator.SetBool("IsDashing",false);animator.Update(.02f);
+  if(!animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))throw new System.Exception("地面冲刺不能返回待机");
+  Object.DestroyImmediate(temporary);Debug.Log("DEMO_DASH_TRANSITIONS_OK: immediate entry and grounded/air exits");
+ }
  public static void Configure(){
  var mana=AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/Resources/Items/mana_flask.asset");if(mana==null){mana=ScriptableObject.CreateInstance<ItemDefinition>();mana.id="mana_flask";mana.displayName="蓝瓶";mana.description="检查点分配的循环蓝瓶，恢复蓝量";mana.kind=ItemKind.ManaFlask;mana.stackLimit=1;mana.retainWhenEmpty=true;mana.manaRecovery=50;mana.color=new Color(.25f,.5f,1);AssetDatabase.CreateAsset(mana,"Assets/Resources/Items/mana_flask.asset");}
  var orb=new GameObject("白球",typeof(SpriteRenderer),typeof(SkillOrb));orb.GetComponent<SpriteRenderer>().sprite=AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Resources/Sprites/Circle.png");orb.GetComponent<SpriteRenderer>().sortingOrder=8;orb.transform.localScale=Vector3.one*.4f;PrefabUtility.SaveAsPrefabAsset(orb,"Assets/Prefabs/Player/SkillOrb.prefab");Object.DestroyImmediate(orb);

@@ -1,4 +1,5 @@
 ﻿using HollowDemo;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -6,6 +7,41 @@ using UnityEngine.UI;
 
 public static class PlayerHudAuthoring
 {
+    [MenuItem("洞穴 Demo/替换血量与瓶子图标")]
+    public static void ReplaceHealthAndFlaskIcons()
+    {
+        var sprites=new Sprite[3];var names=new[]{"coin","HPbottle","MPbottle"};
+        for(int n=0;n<3;n++)
+        {
+            string path="Assets/Resources/Sprites/"+names[n]+".png";
+            AssetDatabase.ImportAsset(path);var importer=(TextureImporter)AssetImporter.GetAtPath(path);
+            importer.textureType=TextureImporterType.Sprite;importer.isReadable=true;importer.alphaIsTransparency=true;importer.textureCompression=TextureImporterCompression.Uncompressed;importer.SaveAndReimport();
+            var texture=AssetDatabase.LoadAssetAtPath<Texture2D>(path);var pixels=texture.GetPixels32();int minX=texture.width,minY=texture.height,maxX=0,maxY=0;
+            for(int y=0;y<texture.height;y++)for(int x=0;x<texture.width;x++)if(pixels[y*texture.width+x].a>0){minX=Mathf.Min(minX,x);minY=Mathf.Min(minY,y);maxX=Mathf.Max(maxX,x);maxY=Mathf.Max(maxY,y);}
+            importer.spriteImportMode=SpriteImportMode.Multiple;
+            importer.spritesheet=new[]{new SpriteMetaData{name=names[n],rect=new Rect(minX,minY,maxX-minX+1,maxY-minY+1),alignment=(int)SpriteAlignment.Center,pivot=new Vector2(.5f,.5f)}};
+            importer.isReadable=false;importer.SaveAndReimport();sprites[n]=AssetDatabase.LoadAllAssetsAtPath(path).OfType<Sprite>().Single();
+        }
+        System.IO.Directory.CreateDirectory("Assets/Materials");AssetDatabase.Refresh();
+        const string materialPath="Assets/Materials/EmptyHealth.mat";
+        var material=AssetDatabase.LoadAssetAtPath<Material>(materialPath);
+        if(material==null){material=new Material(Shader.Find("HollowDemo/UI Health Grayscale"));AssetDatabase.CreateAsset(material,materialPath);}
+        var prefab=PrefabUtility.LoadPrefabContents("Assets/Prefabs/UI/PlayerHUD.prefab");
+        var hud=prefab.GetComponent<PlayerHudCanvas>();hud.emptyHealthMaterial=material;hud.filledHealthColor=Color.white;hud.emptyHealthColor=new Color(.65f,.65f,.65f,1);
+        foreach(var image in hud.healthSquares){image.sprite=sprites[0];image.preserveAspect=true;image.color=Color.white;}
+        foreach(var image in hud.itemIcons)image.preserveAspect=true;
+        PrefabUtility.SaveAsPrefabAsset(prefab,"Assets/Prefabs/UI/PlayerHUD.prefab");PrefabUtility.UnloadPrefabContents(prefab);
+        var scene=EditorSceneManager.OpenScene("Assets/Scenes/HollowGeometry.unity");
+        foreach(var current in Object.FindObjectsOfType<PlayerHudCanvas>(true))
+        {
+            current.emptyHealthMaterial=material;current.filledHealthColor=Color.white;current.emptyHealthColor=new Color(.65f,.65f,.65f,1);
+            foreach(var image in current.healthSquares){image.sprite=sprites[0];image.preserveAspect=true;image.color=Color.white;EditorUtility.SetDirty(image);}
+            foreach(var image in current.itemIcons){image.preserveAspect=true;EditorUtility.SetDirty(image);}
+            EditorUtility.SetDirty(current);
+        }
+        for(int n=1;n<3;n++){var item=AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/Resources/Items/"+(n==1?"flask":"mana_flask")+".asset");item.icon=sprites[n];EditorUtility.SetDirty(item);}
+        EditorSceneManager.SaveScene(scene);AssetDatabase.SaveAssets();Debug.Log("DEMO_HEALTH_ICONS_OK");
+    }
     public static void Configure()
     {
         var scene = EditorSceneManager.OpenScene("Assets/Scenes/HollowGeometry.unity");
